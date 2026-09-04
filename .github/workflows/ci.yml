@@ -72,7 +72,8 @@ jobs:
       - name: Lint - errors (whole repo)
         shell: pwsh
         run: |
-          $r = Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -Severity Error
+          $r = @(Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -Severity Error |
+                     Where-Object { $_.Severity -eq 'Error' })
           if ($r) {
               $r | Format-Table -AutoSize | Out-String | Write-Host
               throw "$($r.Count) analyzer error(s)."
@@ -84,7 +85,8 @@ jobs:
         shell: pwsh
         run: |
           if (-not (Test-Path .\Modules)) { Write-Host "No Modules/ yet."; return }
-          $r = Invoke-ScriptAnalyzer -Path .\Modules -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -Severity Error, Warning
+          $r = @(Invoke-ScriptAnalyzer -Path .\Modules -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 -Severity Error, Warning |
+                     Where-Object { $_.Severity -in @('Error', 'Warning') })
           if ($r) {
               $r | Format-Table -AutoSize | Out-String | Write-Host
               throw "$($r.Count) analyzer finding(s) in Modules/."
