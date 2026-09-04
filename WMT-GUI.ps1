@@ -1,9 +1,10 @@
 ﻿<#
-    Windows Maintenance Tool - GUI Edition
-    CLI: Lil_Batti (author) with contributions from Chaython
-    Feature Integration & Updates: Lil_Batti & Chaython
-    GUI thanks to https://github.com/Chaython
-    Imported and integrated from Lil_Batti (author) with contributions from Chaython
+    WinMedic - Windows maintenance, diagnostics and repair toolkit
+    https://github.com/c0mrad393/WinMedic
+
+    Derived from Windows Maintenance Tool (MIT), (c) 2025 ios12checker.
+    Original authors: Lil_Batti (CLI), Chaython (GUI).
+    See LICENSE for the full MIT notice.
 #>
 
 # ==========================================
@@ -129,7 +130,7 @@ try {
 catch {
     try {
         Add-Type -AssemblyName PresentationFramework -ErrorAction SilentlyContinue
-        [System.Windows.MessageBox]::Show("Failed to restart Windows Maintenance Tool as administrator.`r`n`r`n$($_.Exception.Message)", "WMT Launch Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error) | Out-Null
+        [System.Windows.MessageBox]::Show("Failed to restart WinMedic as administrator.`r`n`r`n$($_.Exception.Message)", "WinMedic Launch Error", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error) | Out-Null
     }
     catch {}
 }
@@ -2746,7 +2747,7 @@ catch {}
 function Show-WmtMessageBox {
 param(
     [string]$Message,
-    [string]$Title = "Windows Maintenance Tool",
+    [string]$Title = "WinMedic",
     [System.Windows.MessageBoxButton]$Button = [System.Windows.MessageBoxButton]::OK,
     [System.Windows.MessageBoxImage]$Image = [System.Windows.MessageBoxImage]::None,
     [System.Windows.Window]$Owner = $null
@@ -2771,6 +2772,519 @@ try {
 catch {}
 }
 
+# ==========================================
+# 1b. LOCALIZATION (WinMedic)
+# ==========================================
+# UI text is translated at the point it reaches WPF - when XAML is parsed, and
+# when a button caption or tooltip is assigned in code - keyed by the original
+# English string. No resource ids are threaded through the 44k-line body, which
+# is what keeps `git merge upstream/main` workable.
+#
+# Language comes from settings.json ("Language": "ka" or "en") and defaults to
+# "ka". Any string missing from the table falls back to English, so a partial
+# translation is a working translation.
+#
+# Dropping an i18n\<code>.psd1 file next to this script overrides and extends
+# the built-in table without editing this file - useful while translating.
+
+$script:WmtStringsKa = @{
+    'Updates'                                                                            = 'განახლებები'
+    'Tweaks'                                                                             = 'მორგება'
+    'System Health'                                                                      = 'სისტემის ჯანმრთელობა'
+    'Network & DNS'                                                                      = 'ქსელი და DNS'
+    'Firewall'                                                                           = 'ფაერვოლი'
+    'Drivers'                                                                            = 'დრაივერები'
+    'Cleanup'                                                                            = 'გაწმენდა'
+    'Utilities'                                                                          = 'ხელსაწყოები'
+    'Support'                                                                            = 'მხარდაჭერა'
+    'My Device'                                                                          = 'ჩემი მოწყობილობა'
+    'NAVIGATION'                                                                         = 'ნავიგაცია'
+    'Quick Find'                                                                         = 'სწრაფი ძებნა'
+    'Download Stats'                                                                     = 'ჩამოტვირთვის სტატისტიკა'
+    'ABOUT'                                                                              = 'პროექტის შესახებ'
+    'GET INVOLVED'                                                                       = 'ჩაერთე'
+    'CLEANUP TOOLS'                                                                      = 'გაწმენდის ხელსაწყოები'
+    'DIAGNOSTIC TOOLS'                                                                   = 'დიაგნოსტიკის ხელსაწყოები'
+    'DRIVER TOOLS'                                                                       = 'დრაივერების ხელსაწყოები'
+    'WINDOWS REPAIR TOOLS'                                                               = 'WINDOWS-ის აღდგენის ხელსაწყოები'
+    'WINDOWS UPDATE SETTINGS'                                                            = 'WINDOWS UPDATE-ის პარამეტრები'
+    'REPAIRS & SETTINGS'                                                                 = 'აღდგენა და პარამეტრები'
+    'SYSTEM INFO & MAINTENANCE'                                                          = 'სისტემის ინფორმაცია და მოვლა'
+    'DNS SERVERS'                                                                        = 'DNS სერვერები'
+    'DNS OVER HTTPS'                                                                     = 'DNS OVER HTTPS'
+    'HOSTS FILE MANAGER'                                                                 = 'HOSTS ფაილის მენეჯერი'
+    'Support & Credits'                                                                  = 'მხარდაჭერა და ავტორები'
+    'Install'                                                                            = 'დაყენება'
+    'Uninstall'                                                                          = 'წაშლა'
+    'Uninstall / Delete'                                                                 = 'წაშლა'
+    'Update'                                                                             = 'განახლება'
+    'Update All'                                                                         = 'ყველას განახლება'
+    'Update Checked'                                                                     = 'მონიშნულების განახლება'
+    'Refresh All'                                                                        = 'ყველას განახლება'
+    'Refresh Library'                                                                    = 'ბიბლიოთეკის განახლება'
+    'Install Selected'                                                                   = 'მონიშნულების დაყენება'
+    'Select All'                                                                         = 'ყველას მონიშვნა'
+    'Clear Selection'                                                                    = 'მონიშვნის მოხსნა'
+    'Select'                                                                             = 'მონიშვნა'
+    'Remove Selected'                                                                    = 'მონიშნულების წაშლა'
+    'Remove All'                                                                         = 'ყველას წაშლა'
+    'Delete'                                                                             = 'წაშლა'
+    'Delete All'                                                                         = 'ყველას წაშლა'
+    'Ignore'                                                                             = 'იგნორირება'
+    'Manage Ignored'                                                                     = 'იგნორირებულების მართვა'
+    'Reload'                                                                             = 'გადატვირთვა'
+    'Retry'                                                                              = 'ხელახლა'
+    'Edit'                                                                               = 'რედაქტირება'
+    'Export'                                                                             = 'ექსპორტი'
+    'Import'                                                                             = 'იმპორტი'
+    'Backup'                                                                             = 'სარეზერვო ასლი'
+    'Restore'                                                                            = 'აღდგენა'
+    'Repair'                                                                             = 'აღდგენა'
+    'Report'                                                                             = 'ანგარიში'
+    'Generate Report'                                                                    = 'ანგარიშის შექმნა'
+    'Clean'                                                                              = 'გაწმენდა'
+    'Enable'                                                                             = 'ჩართვა'
+    'Disable'                                                                            = 'გამორთვა'
+    'Disable All'                                                                        = 'ყველას გამორთვა'
+    'Defaults'                                                                           = 'ნაგულისხმევი'
+    'Default'                                                                            = 'ნაგულისხმევი'
+    'Restore Defaults'                                                                   = 'ნაგულისხმევის აღდგენა'
+    'Latest'                                                                             = 'უახლესი'
+    'All'                                                                                = 'ყველა'
+    'Custom...'                                                                          = 'სხვა...'
+    'Copy ID'                                                                            = 'ID-ის კოპირება'
+    'Add Rule'                                                                           = 'წესის დამატება'
+    'Back to Catalog'                                                                    = 'კატალოგში დაბრუნება'
+    'Back to Updates'                                                                    = 'განახლებებში დაბრუნება'
+    'Your Library'                                                                       = 'შენი ბიბლიოთეკა'
+    'Load Apps'                                                                          = 'აპების ჩატვირთვა'
+    'Launch / Play'                                                                      = 'გაშვება'
+    'Open store page'                                                                    = 'მაღაზიის გვერდის გახსნა'
+    'Go to install directory'                                                            = 'დაყენების საქაღალდეში გადასვლა'
+    'Name'                                                                               = 'სახელი'
+    'Description'                                                                        = 'აღწერა'
+    'Status'                                                                             = 'სტატუსი'
+    'Category'                                                                           = 'კატეგორია'
+    'Source'                                                                             = 'წყარო'
+    'Action'                                                                             = 'მოქმედება'
+    'Package'                                                                            = 'პაკეტი'
+    'Package Name'                                                                       = 'პაკეტის სახელი'
+    'Port'                                                                               = 'პორტი'
+    'Protocol'                                                                           = 'პროტოკოლი'
+    'Direction'                                                                          = 'მიმართულება'
+    'Rule Name'                                                                          = 'წესის სახელი'
+    'Installed'                                                                          = 'დაყენებული'
+    'ID'                                                                                 = 'ID'
+    'Ready'                                                                              = 'მზადაა'
+    'Ready to scan'                                                                      = 'სკანირებისთვის მზადაა'
+    'Buttons will be ready in a moment'                                                  = 'ღილაკები წამში მზად იქნება'
+    'Loading tweak states...'                                                            = 'პარამეტრების მდგომარეობა იტვირთება...'
+    'Status: Loading...'                                                                 = 'სტატუსი: იტვირთება...'
+    'Health: Loading...'                                                                 = 'ჯანმრთელობა: იტვირთება...'
+    'Charge: Loading...'                                                                 = 'დამუხტვა: იტვირთება...'
+    'Power: Loading...'                                                                  = 'კვება: იტვირთება...'
+    'Power Draw: Loading...'                                                             = 'მოხმარება: იტვირთება...'
+    'Total Power: Loading...'                                                            = 'საერთო მოხმარება: იტვირთება...'
+    'Electrical: Loading...'                                                             = 'ელექტრული: იტვირთება...'
+    'Time Remaining: Loading...'                                                         = 'დარჩენილი დრო: იტვირთება...'
+    'Search packages...'                                                                 = 'პაკეტების ძებნა...'
+    'Search library...'                                                                  = 'ბიბლიოთეკაში ძებნა...'
+    'Search rules...'                                                                    = 'წესების ძებნა...'
+    'Browsers'                                                                           = 'ბრაუზერები'
+    'Development'                                                                        = 'დეველოპმენტი'
+    'Multimedia'                                                                         = 'მულტიმედია'
+    'Gaming'                                                                             = 'თამაშები'
+    'Security'                                                                           = 'უსაფრთხოება'
+    'Providers'                                                                          = 'წყაროები'
+    'Software Catalog'                                                                   = 'პროგრამების კატალოგი'
+    'Package Updates'                                                                    = 'პაკეტების განახლებები'
+    'Curated selection of popular applications'                                          = 'პოპულარული აპლიკაციების შერჩეული სია'
+    'Quick Fix'                                                                          = 'სწრაფი შეკეთება'
+    'SFC Scan'                                                                           = 'SFC სკანირება'
+    'DISM Check'                                                                         = 'DISM შემოწმება'
+    'DISM Restore'                                                                       = 'DISM აღდგენა'
+    'CHKDSK'                                                                             = 'CHKDSK'
+    'Full Repair'                                                                        = 'სრული აღდგენა'
+    'Check WinRE'                                                                        = 'WinRE-ის შემოწმება'
+    'WinRE'                                                                              = 'WinRE'
+    'System Report'                                                                      = 'სისტემის ანგარიში'
+    'System Tools'                                                                       = 'სისტემური ხელსაწყოები'
+    'Benchmark'                                                                          = 'წარმადობის ტესტი'
+    'Restart Explorer'                                                                   = 'Explorer-ის გადატვირთვა'
+    'Restart to UEFI'                                                                    = 'UEFI-ში გადატვირთვა'
+    'Restore Manager'                                                                    = 'აღდგენის მენეჯერი'
+    'Storage Drives'                                                                     = 'დისკები'
+    'Trim / Defrag'                                                                      = 'Trim / დეფრაგმენტაცია'
+    'Trim SSD'                                                                           = 'SSD Trim'
+    'Disk Mgmt'                                                                          = 'დისკების მართვა'
+    'Disk Cleanup'                                                                       = 'დისკის გაწმენდა'
+    'Free Up Space'                                                                      = 'ადგილის გათავისუფლება'
+    'Operating System'                                                                   = 'ოპერაციული სისტემა'
+    'Processor (CPU)'                                                                    = 'პროცესორი (CPU)'
+    'Memory (RAM)'                                                                       = 'ოპერატიული მეხსიერება (RAM)'
+    'Graphics (GPU)'                                                                     = 'ვიდეობარათი (GPU)'
+    'Motherboard'                                                                        = 'დედაპლატა'
+    'Battery / Power'                                                                    = 'ბატარეა / კვება'
+    'Display'                                                                            = 'ეკრანი'
+    'Sound'                                                                              = 'ხმა'
+    'Keyboard'                                                                           = 'კლავიატურა'
+    'Startup'                                                                            = 'ავტოგაშვება'
+    'Privacy'                                                                            = 'კონფიდენციალურობა'
+    'Accessibility'                                                                      = 'ხელმისაწვდომობა'
+    'Network Info'                                                                       = 'ქსელის ინფორმაცია'
+    'System Cleanup'                                                                     = 'სისტემის გაწმენდა'
+    'Temp Files'                                                                         = 'დროებითი ფაილები'
+    'Delete Temp Files'                                                                  = 'დროებითი ფაილების წაშლა'
+    'Clean RAM'                                                                          = 'RAM-ის გათავისუფლება'
+    'Clean Registry'                                                                     = 'რეესტრის გაწმენდა'
+    'Clean Old'                                                                          = 'ძველის გაწმენდა'
+    'Clean Xbox Data'                                                                    = 'Xbox-ის მონაცემების წაშლა'
+    'Appx Bloatware'                                                                     = 'ზედმეტი Appx აპები'
+    'Remove pre-installed UWP/Modern apps'                                               = 'წინასწარ დაყენებული UWP/Modern აპების წაშლა'
+    'Select apps to remove (use Ctrl+Click for multiple)'                                = 'აირჩიე წასაშლელი აპები (რამდენიმესთვის Ctrl+კლიკი)'
+    'Fix Shortcuts'                                                                      = 'მალსახმობების შეკეთება'
+    'OneDrive'                                                                           = 'OneDrive'
+    'Set all OneDrive files to ''Online Only'' to immediately free up local disk space.' = 'OneDrive-ის ყველა ფაილის „მხოლოდ ონლაინ“ რეჟიმში გადაყვანა ლოკალური ადგილის დაუყოვნებლივ გასათავისუფლებლად.'
+    'Driver Management'                                                                  = 'დრაივერების მართვა'
+    'Export Drivers'                                                                     = 'დრაივერების ექსპორტი'
+    'Remove Ghosts'                                                                      = 'აჩრდილების წაშლა'
+    'Ghosts'                                                                             = 'აჩრდილები'
+    'Show Hidden Devices'                                                                = 'დამალული მოწყობილობების ჩვენება'
+    'Drv Log'                                                                            = 'დრაივერების ლოგი'
+    'Disable Auto-Drivers'                                                               = 'ავტომატური დრაივერების გამორთვა'
+    'Disable Metadata'                                                                   = 'მეტამონაცემების გამორთვა'
+    'Reset GPU'                                                                          = 'GPU-ს გადატვირთვა'
+    'Click an individual GPU entry to open that vendor''s control panel.'                = 'დააჭირე კონკრეტულ GPU-ს მწარმოებლის საკონტროლო პანელის გასახსნელად.'
+    'DNS'                                                                                = 'DNS'
+    'Flush DNS'                                                                          = 'DNS ქეშის გასუფთავება'
+    'IP Config'                                                                          = 'IP კონფიგურაცია'
+    'Auto (DHCP)'                                                                        = 'ავტომატური (DHCP)'
+    'Google DNS'                                                                         = 'Google DNS'
+    'Cloudflare'                                                                         = 'Cloudflare'
+    'Quad9'                                                                              = 'Quad9'
+    'Register DoH'                                                                       = 'DoH-ის რეგისტრაცია'
+    'Remove DoH'                                                                         = 'DoH-ის წაშლა'
+    'Hosts'                                                                              = 'Hosts'
+    'Edit Hosts'                                                                         = 'Hosts-ის რედაქტირება'
+    'Routes'                                                                             = 'მარშრუტები'
+    'View Routes'                                                                        = 'მარშრუტების ნახვა'
+    'Save Routes'                                                                        = 'მარშრუტების შენახვა'
+    'Restart Wi-Fi'                                                                      = 'Wi-Fi-ის გადატვირთვა'
+    'Wi-Fi'                                                                              = 'Wi-Fi'
+    'Network Tweaks'                                                                     = 'ქსელის პარამეტრები'
+    'Firewall Manager'                                                                   = 'ფაერვოლის მენეჯერი'
+    'Disable IPv6'                                                                       = 'IPv6-ის გამორთვა'
+    'Disable Net Throttling'                                                             = 'ქსელის შეზღუდვის გამორთვა'
+    'Wi-Fi Sense Off'                                                                    = 'Wi-Fi Sense გამორთული'
+    'Suggested WiFi Off'                                                                 = 'შემოთავაზებული WiFi გამორთული'
+    'Net Location Wizard Off'                                                            = 'ქსელის მდებარეობის ოსტატი გამორთული'
+    'Modern Standby Net Off'                                                             = 'Modern Standby ქსელი გამორთული'
+    'IPv6, throttling, Wi-Fi Sense, network prompts'                                     = 'IPv6, შეზღუდვა, Wi-Fi Sense, ქსელის შეტყობინებები'
+    'Windows Update'                                                                     = 'Windows Update'
+    'Reset Windows Update'                                                               = 'Windows Update-ის განულება'
+    'Restart Services'                                                                   = 'სერვისების გადატვირთვა'
+    'WU Fix'                                                                             = 'WU შეკეთება'
+    'WU Svcs'                                                                            = 'WU სერვისები'
+    'Security Only'                                                                      = 'მხოლოდ უსაფრთხოება'
+    'Update ASAP Off'                                                                    = 'დაუყოვნებელი განახლება გამორთული'
+    'Delivery Opt Off'                                                                   = 'Delivery Optimization გამორთული'
+    'Update behavior and delivery optimization'                                          = 'განახლების ქცევა და მიწოდების ოპტიმიზაცია'
+    'Install Gpedit'                                                                     = 'Gpedit-ის დაყენება'
+    'Enable .NET RollForward'                                                            = '.NET RollForward ჩართვა'
+    'Disable .NET RollForward'                                                           = '.NET RollForward გამორთვა'
+    'AI & Copilot'                                                                       = 'AI და Copilot'
+    'Copilot Off'                                                                        = 'Copilot გამორთული'
+    'Recall Off'                                                                         = 'Recall გამორთული'
+    'Click To Do Off'                                                                    = 'Click To Do გამორთული'
+    'AI Svc AutoStart Off'                                                               = 'AI სერვისის ავტოგაშვება გამორთული'
+    'Edge AI Off'                                                                        = 'Edge AI გამორთული'
+    'Paint AI Off'                                                                       = 'Paint AI გამორთული'
+    'Notepad AI Off'                                                                     = 'Notepad AI გამორთული'
+    'Disable Windows AI features and Recall'                                             = 'Windows-ის AI ფუნქციებისა და Recall-ის გამორთვა'
+    'Power & Performance'                                                                = 'კვება და წარმადობა'
+    'Services to Manual'                                                                 = 'სერვისები ხელით რეჟიმში'
+    'Revert Services'                                                                    = 'სერვისების დაბრუნება'
+    'Disable Hibernation'                                                                = 'ჰიბერნაციის გამორთვა'
+    'Disable Superfetch'                                                                 = 'Superfetch-ის გამორთვა'
+    'Disable Mem Compression'                                                            = 'მეხსიერების შეკუმშვის გამორთვა'
+    'Ultimate Performance'                                                               = 'მაქსიმალური წარმადობა'
+    'Ultimate'                                                                           = 'მაქსიმალური'
+    'Enable HAGS'                                                                        = 'HAGS-ის ჩართვა'
+    'HAGS Toggle'                                                                        = 'HAGS გადამრთველი'
+    'Saver Off'                                                                          = 'დაზოგვა გამორთული'
+    'Saver 20%'                                                                          = 'დაზოგვა 20%'
+    'Saver 50%'                                                                          = 'დაზოგვა 50%'
+    'USB Suspend On'                                                                     = 'USB Suspend ჩართული'
+    'PCIe Savings'                                                                       = 'PCIe დაზოგვა'
+    'Fast Startup Off'                                                                   = 'სწრაფი გაშვება გამორთული'
+    'Hibernate Toggle'                                                                   = 'ჰიბერნაციის გადამრთველი'
+    'Optimize Services'                                                                  = 'სერვისების ოპტიმიზაცია'
+    'View Services'                                                                      = 'სერვისების ნახვა'
+    'Services Management'                                                                = 'სერვისების მართვა'
+    'Optimize, restore, or view Windows services'                                        = 'Windows-ის სერვისების ოპტიმიზაცია, აღდგენა ან ნახვა'
+    'Services, hibernation, battery saver, USB/PCIe power'                               = 'სერვისები, ჰიბერნაცია, ბატარეის დაზოგვა, USB/PCIe კვება'
+    'Fast startup, folder restore'                                                       = 'სწრაფი გაშვება, საქაღალდეების აღდგენა'
+    'Restore Folders On'                                                                 = 'საქაღალდეების აღდგენა ჩართული'
+    'Startup Behavior'                                                                   = 'გაშვების ქცევა'
+    'Startup Manager'                                                                    = 'ავტოგაშვების მენეჯერი'
+    'Optional Features'                                                                  = 'დამატებითი კომპონენტები'
+    'Hyper-V, WSL, Sandbox, .NET, IIS'                                                   = 'Hyper-V, WSL, Sandbox, .NET, IIS'
+    'Legacy Media'                                                                       = 'ძველი მედია კომპონენტები'
+    'VM Platform'                                                                        = 'VM პლატფორმა'
+    'Hypervisor Platform'                                                                = 'ჰიპერვიზორის პლატფორმა'
+    'App Guard'                                                                          = 'App Guard'
+    'Wireless Display'                                                                   = 'უსადენო ეკრანი'
+    'Quick Assist'                                                                       = 'Quick Assist'
+    'XPS Viewer'                                                                         = 'XPS მნახველი'
+    'Disable Telemetry Tasks'                                                            = 'ტელემეტრიის ამოცანების გამორთვა'
+    'Restore Tasks'                                                                      = 'ამოცანების აღდგენა'
+    'View Tasks'                                                                         = 'ამოცანების ნახვა'
+    'Disable telemetry and tracking tasks'                                               = 'ტელემეტრიისა და თვალთვალის ამოცანების გამორთვა'
+    'Scheduled Tasks'                                                                    = 'დაგეგმილი ამოცანები'
+    'Task Scheduler'                                                                     = 'ამოცანების გამრთველი'
+    'Ad ID Off'                                                                          = 'სარეკლამო ID გამორთული'
+    'Location Off'                                                                       = 'მდებარეობა გამორთული'
+    'Find My Device Off'                                                                 = 'მოწყობილობის ძებნა გამორთული'
+    'Activity History Off'                                                               = 'აქტივობის ისტორია გამორთული'
+    'App Diagnostics Off'                                                                = 'აპების დიაგნოსტიკა გამორთული'
+    'Background Apps Off'                                                                = 'ფონური აპები გამორთული'
+    'Launch Tracking Off'                                                                = 'გაშვების თვალთვალი გამორთული'
+    'Inking Personal Off'                                                                = 'ხელწერის პერსონალიზაცია გამორთული'
+    'Speech Online Off'                                                                  = 'ონლაინ მეტყველება გამორთული'
+    'Tailored Off'                                                                       = 'მორგებული გამოცდილება გამორთული'
+    'Diag Data Required'                                                                 = 'დიაგნოსტიკური მონაცემები: მინიმალური'
+    'CEIP Off'                                                                           = 'CEIP გამორთული'
+    'Compat Telemetry Off'                                                               = 'თავსებადობის ტელემეტრია გამორთული'
+    'Feedback Notify Off'                                                                = 'გამოხმაურების შეტყობინებები გამორთული'
+    'Capture Off'                                                                        = 'ჩაწერა გამორთული'
+    'Ad ID, tracking, find my device, location'                                          = 'სარეკლამო ID, თვალთვალი, მოწყობილობის ძებნა, მდებარეობა'
+    'Activity Log'                                                                       = 'აქტივობის ჟურნალი'
+    'Explorer & Files'                                                                   = 'Explorer და ფაილები'
+    'Show Extensions'                                                                    = 'გაფართოებების ჩვენება'
+    'Show Hidden Files'                                                                  = 'დამალული ფაილების ჩვენება'
+    'Hide Gallery'                                                                       = 'გალერეის დამალვა'
+    'Hide Home'                                                                          = 'Home-ის დამალვა'
+    'Hide OneDrive'                                                                      = 'OneDrive-ის დამალვა'
+    'Hide Dup Drive'                                                                     = 'დუბლირებული დისკის დამალვა'
+    'Hide 3D Objects'                                                                    = '3D ობიექტების დამალვა'
+    'Open to This PC'                                                                    = 'გახსნა This PC-ზე'
+    'Full Path On'                                                                       = 'სრული გზა ჩართული'
+    'Drive Letters First'                                                                = 'დისკის ასოები პირველად'
+    'Single-Click Folders'                                                               = 'საქაღალდეები ერთი კლიკით'
+    'Disable Thumbnail Cache'                                                            = 'მინიატურების ქეშის გამორთვა'
+    'Disable NTFS 8.3'                                                                   = 'NTFS 8.3 გამორთვა'
+    'Disable NTFS Last Access'                                                           = 'NTFS ბოლო წვდომის გამორთვა'
+    'Disable FS Optimizations'                                                           = 'ფაილური სისტემის ოპტიმიზაციის გამორთვა'
+    'Long Paths On'                                                                      = 'გრძელი გზები ჩართული'
+    'Extensions, hidden files, gallery, OneDrive'                                        = 'გაფართოებები, დამალული ფაილები, გალერეა, OneDrive'
+    'Taskbar & Clock'                                                                    = 'ამოცანათა ზოლი და საათი'
+    'Align Taskbar Left'                                                                 = 'ამოცანათა ზოლი მარცხნივ'
+    'Hide Search'                                                                        = 'ძებნის დამალვა'
+    'Hide Task View'                                                                     = 'Task View-ის დამალვა'
+    'Hide Widgets'                                                                       = 'ვიჯეტების დამალვა'
+    'Hide Chat'                                                                          = 'ჩატის დამალვა'
+    'Never Combine'                                                                      = 'არასდროს გააერთიანო'
+    'End Task on Taskbar'                                                                = 'End Task ამოცანათა ზოლში'
+    'Show Clock Seconds'                                                                 = 'წამების ჩვენება საათზე'
+    '24-Hour Clock'                                                                      = '24-საათიანი ფორმატი'
+    'Alignment, widgets, chat, combine, end task'                                        = 'განლაგება, ვიჯეტები, ჩატი, გაერთიანება, End Task'
+    'Start Menu'                                                                         = 'Start მენიუ'
+    'Hide Recommended'                                                                   = 'რეკომენდებულის დამალვა'
+    'Hide All Apps'                                                                      = 'ყველა აპის დამალვა'
+    'Hide Recents'                                                                       = 'ბოლოს გამოყენებულების დამალვა'
+    'Hide Phone Link'                                                                    = 'Phone Link-ის დამალვა'
+    'Recommended apps, all apps, phone link'                                             = 'რეკომენდებული აპები, ყველა აპი, Phone Link'
+    'Context Menu'                                                                       = 'კონტექსტური მენიუ'
+    'Classic Right-Click'                                                                = 'კლასიკური მარჯვენა კლიკი'
+    'Add CMD Here'                                                                       = 'CMD აქ'
+    'Add PowerShell Here'                                                                = 'PowerShell აქ'
+    'Add Take Ownership'                                                                 = 'მფლობელობის აღება'
+    'Add Notepad'                                                                        = 'Notepad-ის დამატება'
+    'Remove Cast to Device'                                                              = 'Cast to Device-ის წაშლა'
+    'Remove Print'                                                                       = 'ბეჭდვის წაშლა'
+    'Classic menu, take ownership, PowerShell here'                                      = 'კლასიკური მენიუ, მფლობელობის აღება, PowerShell აქ'
+    'Visual Effects'                                                                     = 'ვიზუალური ეფექტები'
+    'Dark Mode'                                                                          = 'მუქი რეჟიმი'
+    'Transparency Off'                                                                   = 'გამჭვირვალობა გამორთული'
+    'Animations Off'                                                                     = 'ანიმაციები გამორთული'
+    'Best Performance'                                                                   = 'საუკეთესო წარმადობა'
+    'Best Appearance'                                                                    = 'საუკეთესო იერსახე'
+    'Snappy Desktop'                                                                     = 'სწრაფი დესკტოპი'
+    'Appearance, dark mode, transparency, animations'                                    = 'იერსახე, მუქი რეჟიმი, გამჭვირვალობა, ანიმაციები'
+    'Display Settings'                                                                   = 'ეკრანის პარამეტრები'
+    'Night Light On'                                                                     = 'ღამის განათება ჩართული'
+    'HDR Toggle'                                                                         = 'HDR გადამრთველი'
+    'Scale 100%'                                                                         = 'მასშტაბი 100%'
+    'Scale 125%'                                                                         = 'მასშტაბი 125%'
+    'Scale 150%'                                                                         = 'მასშტაბი 150%'
+    'Calibrate Color'                                                                    = 'ფერის კალიბრაცია'
+    'Night light, HDR, scaling, color calibration'                                       = 'ღამის განათება, HDR, მასშტაბი, ფერის კალიბრაცია'
+    'Mouse & Clicking'                                                                   = 'თაგვი და კლიკები'
+    'Mouse Settings'                                                                     = 'თაგვის პარამეტრები'
+    'Acceleration On'                                                                    = 'აჩქარება ჩართული'
+    'Cursor Default'                                                                     = 'კურსორი: ნაგულისხმევი'
+    'Cursor Fast'                                                                        = 'კურსორი: სწრაფი'
+    'Cursor Slow'                                                                        = 'კურსორი: ნელი'
+    'Last Active Click'                                                                  = 'ბოლო აქტიური კლიკი'
+    'Pointer speed, acceleration, click mode'                                            = 'კურსორის სიჩქარე, აჩქარება, კლიკის რეჟიმი'
+    'Keyboard Settings'                                                                  = 'კლავიატურის პარამეტრები'
+    'NumLock at Startup'                                                                 = 'NumLock გაშვებისას'
+    'CapsLock at Startup'                                                                = 'CapsLock გაშვებისას'
+    'Sticky Keys Off'                                                                    = 'წებოვანი ღილაკები გამორთული'
+    'Filter Keys On'                                                                     = 'ფილტრის ღილაკები ჩართული'
+    'Toggle Keys On'                                                                     = 'გადამრთველი ღილაკები ჩართული'
+    'Sticky keys, filter keys, toggle keys, NumLock'                                     = 'წებოვანი ღილაკები, ფილტრის ღილაკები, გადამრთველები, NumLock'
+    'A11y Settings'                                                                      = 'ხელმისაწვდომობის პარამეტრები'
+    'High Contrast On'                                                                   = 'მაღალი კონტრასტი ჩართული'
+    'Narrator'                                                                           = 'მთხრობელი'
+    'Magnifier'                                                                          = 'გამადიდებელი'
+    'Color Filter On'                                                                    = 'ფერის ფილტრი ჩართული'
+    'High contrast, narrator, magnifier, color filters'                                  = 'მაღალი კონტრასტი, მთხრობელი, გამადიდებელი, ფერის ფილტრები'
+    'Sound Settings'                                                                     = 'ხმის პარამეტრები'
+    'Startup Sound Off'                                                                  = 'გაშვების ხმა გამორთული'
+    'Device Connect Sound Off'                                                           = 'მოწყობილობის შეერთების ხმა გამორთული'
+    'Notification Sound Off'                                                             = 'შეტყობინების ხმა გამორთული'
+    'Spatial Audio On'                                                                   = 'სივრცული ხმა ჩართული'
+    'Startup, notifications, device connect, spatial audio'                              = 'გაშვება, შეტყობინებები, მოწყობილობის შეერთება, სივრცული ხმა'
+    'Notifications & Lock'                                                               = 'შეტყობინებები და ჩაკეტვა'
+    'Tips Off'                                                                           = 'რჩევები გამორთული'
+    'Spotlight Off'                                                                      = 'Spotlight გამორთული'
+    'Lockscreen Tips Off'                                                                = 'ჩაკეტვის ეკრანის რჩევები გამორთული'
+    'Setup Prompts Off'                                                                  = 'დაყენების შეტყობინებები გამორთული'
+    'Suggestions Off'                                                                    = 'შემოთავაზებები გამორთული'
+    'Lock Facts Off'                                                                     = 'ჩაკეტვის ეკრანის ფაქტები გამორთული'
+    'Plain Lock Screen'                                                                  = 'მარტივი ჩაკეტვის ეკრანი'
+    'Device Auto-Apps Off'                                                               = 'მოწყობილობის ავტო-აპები გამორთული'
+    'Tips, spotlight, search highlights, setup prompts'                                  = 'რჩევები, Spotlight, ძებნის მინიშნებები, დაყენების შეტყობინებები'
+    'Search & Indexing'                                                                  = 'ძებნა და ინდექსირება'
+    'Web Search Off'                                                                     = 'ვებ-ძებნა გამორთული'
+    'Search History Off'                                                                 = 'ძებნის ისტორია გამორთული'
+    'Search Highlights Off'                                                              = 'ძებნის მინიშნებები გამორთული'
+    'Rebuild Index'                                                                      = 'ინდექსის ხელახლა აგება'
+    'Reduce Indexing'                                                                    = 'ინდექსირების შემცირება'
+    'Index Options'                                                                      = 'ინდექსირების პარამეტრები'
+    'Bing, history, highlights, index rebuild'                                           = 'Bing, ისტორია, მინიშნებები, ინდექსის აგება'
+    'Game Mode On'                                                                       = 'თამაშის რეჟიმი ჩართული'
+    'Game Bar On'                                                                        = 'Game Bar ჩართული'
+    'Game Bar Int. Off'                                                                  = 'Game Bar ინტეგრაცია გამორთული'
+    'DVR Off'                                                                            = 'DVR გამორთული'
+    'Game Mode, Game Bar, DVR, FS optimizations'                                         = 'თამაშის რეჟიმი, Game Bar, DVR, FS ოპტიმიზაცია'
+    'Developer'                                                                          = 'დეველოპერი'
+    'Developer Settings'                                                                 = 'დეველოპერის პარამეტრები'
+    'Developer Mode On'                                                                  = 'დეველოპერის რეჟიმი ჩართული'
+    'Enable PS Execution'                                                                = 'PowerShell-ის შესრულების ჩართვა'
+    'Disable WSH'                                                                        = 'WSH-ის გამორთვა'
+    'God Mode Folder'                                                                    = 'God Mode საქაღალდე'
+    'Test Mode On'                                                                       = 'სატესტო რეჟიმი ჩართული'
+    'Enable Sudo'                                                                        = 'Sudo-ს ჩართვა'
+    'Dev mode, script host, God Mode, UEFI, test mode'                                   = 'დეველოპერის რეჟიმი, script host, God Mode, UEFI, სატესტო რეჟიმი'
+    'Security Shortcuts'                                                                 = 'უსაფრთხოების მალსახმობები'
+    'UAC Settings'                                                                       = 'UAC პარამეტრები'
+    'UAC Status'                                                                         = 'UAC სტატუსი'
+    'SmartScreen Settings'                                                               = 'SmartScreen პარამეტრები'
+    'SmartScreen Status'                                                                 = 'SmartScreen სტატუსი'
+    'Controlled Folders'                                                                 = 'კონტროლირებადი საქაღალდეები'
+    'Bitlocker Auto Off'                                                                 = 'Bitlocker ავტო გამორთული'
+    'UAC, SmartScreen, Controlled Folders, Bitlocker'                                    = 'UAC, SmartScreen, კონტროლირებადი საქაღალდეები, Bitlocker'
+    'Multi-tasking'                                                                      = 'მრავალამოცანიანობა'
+    'Snap Assist Off'                                                                    = 'Snap Assist გამორთული'
+    'Snap Layouts Off'                                                                   = 'Snap Layouts გამორთული'
+    'Window Snapping Off'                                                                = 'ფანჯრების მიბმა გამორთული'
+    'Snap assist, snap layouts, window snapping'                                         = 'Snap assist, snap layouts, ფანჯრების მიბმა'
+    'Focus Settings'                                                                     = 'ფოკუსის პარამეტრები'
+    'Start with Windows'                                                                 = 'Windows-თან ერთად გაშვება'
+    'Toggle Theme'                                                                       = 'თემის შეცვლა'
+    'Bg Jobs: On'                                                                        = 'ფონური ამოცანები: ჩართული'
+    'Update Scans: On'                                                                   = 'განახლების სკანირება: ჩართული'
+    'Report Issue'                                                                       = 'პრობლემის შეტყობინება'
+    'GitHub'                                                                             = 'GitHub'
+    'Project: '                                                                          = 'პროექტი: '
+    'MAS Activation'                                                                     = 'MAS აქტივაცია'
+    'WinMedic is an open source Windows maintenance toolkit built on PowerShell.'        = 'WinMedic არის ღია კოდის Windows-ის მოვლის ინსტრუმენტი, აწყობილი PowerShell-ზე.'
+}
+
+$script:WmtLangCode  = $null
+$script:WmtStringMap = $null
+
+function Get-WmtLanguageCode {
+if ($script:WmtLangCode) { return $script:WmtLangCode }
+$code = 'ka'
+try {
+    $s = Get-WmtSettings
+    if ($s -and -not [string]::IsNullOrWhiteSpace([string]$s.Language)) { $code = [string]$s.Language }
+}
+catch {}
+$script:WmtLangCode = $code.Trim().ToLowerInvariant()
+return $script:WmtLangCode
+}
+
+function Get-WmtStringMap {
+if ($null -ne $script:WmtStringMap) { return $script:WmtStringMap }
+$code = Get-WmtLanguageCode
+$map = @{}
+if ($code -eq 'ka') {
+    foreach ($k in $script:WmtStringsKa.Keys) { $map[[string]$k] = [string]$script:WmtStringsKa[$k] }
+}
+if ($code -ne 'en') {
+    try {
+        $root = $script:WmtRootPath
+        if (-not [string]::IsNullOrWhiteSpace($root)) {
+            $file = Join-Path $root ("i18n\{0}.psd1" -f $code)
+            if (Test-Path -LiteralPath $file) {
+                $ext = Import-PowerShellDataFile -LiteralPath $file
+                if ($ext) { foreach ($k in $ext.Keys) { $map[[string]$k] = [string]$ext[$k] } }
+            }
+        }
+    }
+    catch {}
+}
+$script:WmtStringMap = $map
+return $map
+}
+
+function Get-WmtText {
+param([string]$Text)
+if ([string]::IsNullOrEmpty($Text)) { return $Text }
+$map = Get-WmtStringMap
+if ($map.Count -eq 0) { return $Text }
+$hit = $map[$Text]
+if ($hit) { return $hit }
+
+# Call sites pad differently than the XAML does ("Project: " vs "Project:").
+$trimmed = $Text.Trim()
+if ($trimmed -ne $Text) {
+    $hit = $map[$trimmed]
+    if ($hit) {
+        $lead = $Text.Substring(0, $Text.Length - $Text.TrimStart().Length)
+        $tail = $Text.Substring($Text.TrimEnd().Length)
+        return ($lead + $hit + $tail)
+    }
+}
+return $Text
+}
+
+$script:WmtXamlTextAttr = [regex]::new('(?<head>\b(?:Content|Text|ToolTip|Header|Title)\s*=\s*")(?<val>[^"]*)(?<tail>")')
+
+function ConvertTo-WmtLocalizedXaml {
+param([string]$Xaml)
+if ([string]::IsNullOrEmpty($Xaml)) { return $Xaml }
+$map = Get-WmtStringMap
+if ($map.Count -eq 0) { return $Xaml }
+
+$evaluator = {
+    param($m)
+    $raw = $m.Groups['val'].Value
+    # Markup extensions ({StaticResource ...}) and icon glyphs (&#xE7FC;) are not text.
+    if ($raw.Length -eq 0 -or $raw[0] -eq '{' -or $raw.StartsWith('&#x')) { return $m.Value }
+    $plain = [System.Net.WebUtility]::HtmlDecode($raw)
+    $translated = Get-WmtText $plain
+    if ($translated -eq $plain) { return $m.Value }
+    return ($m.Groups['head'].Value + [System.Security.SecurityElement]::Escape($translated) + $m.Groups['tail'].Value)
+}
+try { return $script:WmtXamlTextAttr.Replace($Xaml, $evaluator) }
+catch { return $Xaml }
+}
+
 function New-WmtWindowFromXaml {
 param(
     [Parameter(Mandatory = $true)][string]$Title,
@@ -2783,7 +3297,8 @@ param(
     [switch]$NoOwner
 )
 
-$escapedTitle = [System.Security.SecurityElement]::Escape($Title)
+$escapedTitle = [System.Security.SecurityElement]::Escape((Get-WmtText $Title))
+$ContentXaml = ConvertTo-WmtLocalizedXaml $ContentXaml
 $resizeMode = if ($NoResize) { "NoResize" } else { "CanResize" }
 $minWidthText = if ($MinWidth -gt 0) { " MinWidth=`"$MinWidth`"" } else { "" }
 $minHeightText = if ($MinHeight -gt 0) { " MinHeight=`"$MinHeight`"" } else { "" }
@@ -2793,7 +3308,7 @@ $minHeightText = if ($MinHeight -gt 0) { " MinHeight=`"$MinHeight`"" } else { ""
     Title="$escapedTitle" Width="$Width" Height="$Height"$minWidthText$minHeightText
     ResizeMode="$resizeMode" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 $ContentXaml
 </Window>
 "@
@@ -2811,7 +3326,7 @@ param(
     [switch]$NoOwner
 )
 
-$xamlDoc = if ($Xaml -is [System.Xml.XmlDocument]) { $Xaml } else { [xml]([string]$Xaml) }
+$xamlDoc = if ($Xaml -is [System.Xml.XmlDocument]) { $Xaml } else { [xml](ConvertTo-WmtLocalizedXaml ([string]$Xaml)) }
 $reader = [System.Xml.XmlNodeReader]::new($xamlDoc)
 $dialog = [Windows.Markup.XamlReader]::Load($reader)
 Add-WmtThemeResources -Element $dialog
@@ -3846,7 +4361,7 @@ param(
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Width="860" Height="620" MinWidth="520" MinHeight="360"
     WindowStartupLocation="CenterOwner" Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="14">
     <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
@@ -4199,6 +4714,7 @@ try {
         CustomDnsServers           = if ($Settings.CustomDnsServers) { @($Settings.CustomDnsServers) } else { @() }
         CustomDohTemplate          = if ($Settings.CustomDohTemplate) { [string]$Settings.CustomDohTemplate } else { "" }
         CustomDohEnabled           = [bool]$Settings.CustomDohEnabled
+        Language                   = if ($Settings.Language) { [string]$Settings.Language } else { "ka" }
         Theme                      = if ($Settings.Theme) { [string]$Settings.Theme } else { "dark" }
         WindowState                = if ($Settings.WindowState) { [string]$Settings.WindowState } else { "Normal" }
         WindowBounds               = if ($Settings.WindowBounds) { $Settings.WindowBounds } else { $null }
@@ -4229,6 +4745,7 @@ $defaults = @{
     RegistryScan               = @{}
     WingetIgnore               = @("228980") # Filter false positive updates for Steamworks Redist
     WingetIncludeUnknown       = $true
+    Language                   = "ka"
     UpdateAutoScanMinutes      = 0
     UpdateNotificationsEnabled = $true
     UpdateSilentInstallEnabled = $false
@@ -4733,7 +5250,7 @@ else {
 Save-WmtSettings -Settings $settings
 }
 
-$script:WmtNotificationAppId = "Chaython.WindowsMaintenanceTool"
+$script:WmtNotificationAppId = "WinMedic.App"
 $script:WmtNativeToastReady = $false
 $script:WmtNativeToastUnavailable = $false
 $script:WmtNativeToastShortcutWarningShown = $false
@@ -5038,7 +5555,7 @@ public static class DesktopToastShortcut {
         if (!String.IsNullOrEmpty(arguments)) { link.SetArguments(arguments); }
         if (!String.IsNullOrEmpty(workingDirectory)) { link.SetWorkingDirectory(workingDirectory); }
         if (!String.IsNullOrEmpty(iconPath)) { link.SetIconLocation(iconPath, 0); }
-        link.SetDescription("Windows Maintenance Tool");
+        link.SetDescription("WinMedic");
 
         try {
             appIdSet = TrySetAppId((IPropertyStore)shellLinkObject, appId, out warning);
@@ -5084,7 +5601,7 @@ public static class DesktopToastShortcut {
     }
 
     $shortcutResult = [WmtNotifications.DesktopToastShortcut]::EnsureShortcut(
-        "Windows Maintenance Tool",
+        "WinMedic",
         $script:WmtNotificationAppId,
         $launch.TargetPath,
         $launch.Arguments,
@@ -5287,7 +5804,7 @@ try {
     $notifyIcon = New-Object System.Windows.Forms.NotifyIcon
     $trayIconImage = Get-WmtTrayIconImage
     $notifyIcon.Icon = if ($trayIconImage) { $trayIconImage } else { [System.Drawing.SystemIcons]::Application }
-    $notifyIcon.Text = "Windows Maintenance Tool"
+    $notifyIcon.Text = "WinMedic"
     $notifyIcon.ContextMenuStrip = $menu
     $notifyIcon.Visible = $true
 
@@ -5374,7 +5891,7 @@ try {
         "Error" { $notifyIcon.Icon = [System.Drawing.SystemIcons]::Error }
         default { $notifyIcon.Icon = [System.Drawing.SystemIcons]::Information }
     }
-    $notifyIcon.Text = "Windows Maintenance Tool"
+    $notifyIcon.Text = "WinMedic"
     $notifyIcon.BalloonTipTitle = $Title
     $notifyIcon.BalloonTipText = $Message
     switch ($Kind) {
@@ -5411,7 +5928,7 @@ param(
 )
 
 if (-not $IgnoreSetting -and -not (Get-WmtUpdateNotificationsEnabled)) { return $false }
-if ([string]::IsNullOrWhiteSpace($Title)) { $Title = "Windows Maintenance Tool" }
+if ([string]::IsNullOrWhiteSpace($Title)) { $Title = "WinMedic" }
 if ([string]::IsNullOrWhiteSpace($Message)) { return $false }
 
 try {
@@ -5510,7 +6027,7 @@ $message += "."
 function Show-DownloadStats {
 Invoke-UiCommand {
     try {
-        $repo = "ios12checker/Windows-Maintenance-Tool"
+        $repo = "c0mrad393/WinMedic"
         $rel = Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases/latest" -UseBasicParsing
         if (-not $rel -or -not $rel.assets) { throw "No release data returned." }
         $total = ($rel.assets | Measure-Object download_count -Sum).Sum
@@ -5558,7 +6075,7 @@ $script:UpdateRunspace = [PowerShell]::Create().AddScript({
         try {
             if ($IsExe) {
                 # For EXE: Check GitHub releases API
-                $url = "https://api.github.com/repos/ios12checker/Windows-Maintenance-Tool/releases/latest"
+                $url = "https://api.github.com/repos/c0mrad393/WinMedic/releases/latest"
                 $req = Invoke-RestMethod -Uri $url -UseBasicParsing -TimeoutSec 10
 
                 if ($req -and $req.tag_name) {
@@ -5590,7 +6107,7 @@ $script:UpdateRunspace = [PowerShell]::Create().AddScript({
             else {
                 # For Script: Download and parse WMT-GUI.ps1
                 $time = Get-Date -Format "yyyyMMddHHmmss"
-                $url = "https://raw.githubusercontent.com/ios12checker/Windows-Maintenance-Tool/main/WMT-GUI.ps1?t=$time"
+                $url = "https://raw.githubusercontent.com/c0mrad393/WinMedic/main/WMT-GUI.ps1?t=$time"
 
                 # Shorter timeout for UI responsiveness
                 $req = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 10
@@ -5619,7 +6136,7 @@ $script:UpdateRunspace = [PowerShell]::Create().AddScript({
                     $jobRes.RemoteVersion = $matches[1]
                     $jobRes.Status = "Success"
                 }
-                elseif ($content -match ("Windows Maintenance Tool.*v{0}" -f $versionPattern)) {
+                elseif ($content -match ("WinMedic.*v{0}" -f $versionPattern)) {
                     $jobRes.RemoteVersion = $matches[1]
                     $jobRes.Status = "Success"
                 }
@@ -5783,7 +6300,7 @@ $script:UpdateTimer.Add_Tick({
                                             [System.Windows.MessageBoxImage]::Warning
                                         )
                                         if ($fallback -eq [System.Windows.MessageBoxResult]::Yes) {
-                                            Start-Process "https://github.com/ios12checker/Windows-Maintenance-Tool/releases"
+                                            Start-Process "https://github.com/c0mrad393/WinMedic/releases"
                                         }
                                     }
                                 }
@@ -6809,7 +7326,7 @@ if (Test-Path $hostsPath) {
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Hosts File Editor" Width="920" Height="720" MinWidth="660" MinHeight="460"
     WindowStartupLocation="CenterOwner" Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid>
     <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
@@ -8427,7 +8944,7 @@ $isCacheOnly = [bool]$currentSettings.CacheOnly
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Advanced Cleanup Selection" Width="720" Height="820" MinWidth="620" MinHeight="540"
     WindowStartupLocation="CenterOwner" Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Window.Resources>
     <Style x:Key="ModernSearchBoxStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource BgDark}"/>
@@ -9315,7 +9832,7 @@ $formatPreviewBytes = {
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Width="960" Height="680" MinWidth="760" MinHeight="500" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="16">
     <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
@@ -9501,7 +10018,7 @@ $invokePreviewDeletion = {
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Width="560" Height="190" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="20">
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
@@ -9805,7 +10322,7 @@ $previewList = New-Object System.Collections.Generic.List[PSCustomObject]
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Width="520" Height="170" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="20">
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
@@ -11369,7 +11886,7 @@ foreach ($savedKey in @($savedStates.Keys)) {
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Select Registry Scan Targets" Width="680" Height="720" MinWidth="620" MinHeight="640"
     WindowStartupLocation="CenterOwner" Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Window.Resources>
     <Style TargetType="Button">
         <Setter Property="Height" Value="34"/>
@@ -11683,7 +12200,7 @@ function Test-WmtRegistryFindingAutoSelected {
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Deep Registry Cleaner" Width="1280" Height="680" MinWidth="980" MinHeight="560"
     WindowStartupLocation="CenterOwner" Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Window.Resources>
     <Style TargetType="Button">
         <Setter Property="Height" Value="34"/>
@@ -13232,7 +13749,7 @@ if (-not (Test-Path -LiteralPath $BackupDirectory -PathType Container -ErrorActi
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Registry Cleanup Running" Width="620" Height="216" MinWidth="580" MinHeight="200" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="20">
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
@@ -13637,7 +14154,7 @@ param($Count)
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Safety Pre-Check" Width="480" Height="330" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="20">
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
@@ -13799,7 +14316,7 @@ if ($Action -eq "DeepClean") {
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Scanning Registry" Width="640" Height="218" MinWidth="600" MinHeight="200" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="20">
     <Grid.RowDefinitions>
         <RowDefinition Height="56"/>
@@ -23560,9 +24077,9 @@ powercfg /S SCHEME_CURRENT | Out-Null
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Windows Maintenance Tool v$AppVersion" Height="820" Width="1280" MinHeight="620" MinWidth="960"
+    Title="WinMedic v$AppVersion" Height="820" Width="1280" MinHeight="620" MinWidth="960"
     WindowStartupLocation="CenterScreen" Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13"
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13"
     TextOptions.TextFormattingMode="Display"
     TextOptions.TextRenderingMode="ClearType"
     UseLayoutRounding="True"
@@ -25577,32 +26094,28 @@ powercfg /S SCHEME_CURRENT | Out-Null
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Margin="0,0,16,0">
                             <TextBlock Text="Support &amp; Credits" Style="{StaticResource SectionHeader}" Margin="0"/>
-                            <TextBlock Text="Windows Maintenance Tool v$AppVersion" FontSize="14" Foreground="{DynamicResource TextSecondary}" FontWeight="SemiBold"/>
+                            <TextBlock Text="WinMedic v$AppVersion" FontSize="14" Foreground="{DynamicResource TextSecondary}" FontWeight="SemiBold"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                            <Button Name="btnStartWithWindows" Content="Start with Windows" Style="{StaticResource ActionBtn}" Height="32" MinWidth="140" Margin="0,0,8,0" ToolTip="Launch WMT automatically when Windows starts"/>
+                            <Button Name="btnStartWithWindows" Content="Start with Windows" Style="{StaticResource ActionBtn}" Height="32" MinWidth="140" Margin="0,0,8,0" ToolTip="Launch WinMedic automatically when Windows starts"/>
                             <Button Name="btnDisableBgJobs" Content="Bg Jobs: On" Style="{StaticResource ActionBtn}" Height="32" MinWidth="130" Margin="0,0,8,0" ToolTip="Background auto-refresh ENABLED. My Device info and Tweaks states load automatically. Click to disable."/>
                             <Button Name="btnDisableUpdateScans" Content="Update Scans: On" Style="{StaticResource ActionBtn}" Height="32" MinWidth="150" Margin="0,0,8,0" ToolTip="Disable all automatic and tray-triggered update scans. Manual scans will still work. Click to toggle."/>
+                            <Button Name="btnToggleLanguage" Content="Language: ქართული" Style="{StaticResource ActionBtn}" Height="32" MinWidth="150" Margin="0,0,8,0" ToolTip="Switch the interface language"/>
                             <Button Name="btnToggleTheme" Content="Toggle Theme" Style="{StaticResource ActionBtn}" Height="32" MinWidth="112" ToolTip="Switch between dark and light theme"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Credits Card -->
+                <!-- About Card -->
                 <Border Style="{StaticResource CardStyle}">
                     <StackPanel>
-                        <TextBlock Text="CONTRIBUTORS" Style="{StaticResource SubHeader}"/>
-                        <StackPanel Margin="0,8,0,0">
-                            <StackPanel Orientation="Horizontal" Margin="0,4">
-                                <TextBlock Text="Author: " Foreground="{DynamicResource TextSecondary}" Width="120"/>
-                                <Button Name="btnCreditLilBatti" Content="Lil_Batti" Style="{StaticResource ActionBtn}" Height="26" Padding="8,2"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,4">
-                                <TextBlock Text="GUI &amp; Features: " Foreground="{DynamicResource TextSecondary}" Width="120"/>
-                                <Button Name="btnCreditChaython" Content="Chaython" Style="{StaticResource ActionBtn}" Height="26" Padding="8,2"/>
-                            </StackPanel>
+                        <TextBlock Text="ABOUT" Style="{StaticResource SubHeader}"/>
+                        <TextBlock Text="WinMedic is an open source Windows maintenance toolkit built on PowerShell." TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" Margin="0,8,0,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <TextBlock Text="Project: " Foreground="{DynamicResource TextSecondary}" Width="120"/>
+                            <Button Name="btnProjectRepo" Content="GitHub" Style="{StaticResource ActionBtn}" Height="26" Padding="8,2"/>
                         </StackPanel>
-                        <TextBlock Text="MIT License - Copyright (c) 2026" Foreground="{DynamicResource TextMuted}" FontSize="11" Margin="0,16,0,0"/>
+                        <TextBlock Text="MIT License - Copyright (c) 2026 c0mrad393. Derived from Windows Maintenance Tool, Copyright (c) 2025 ios12checker, used under the MIT License." TextWrapping="Wrap" Foreground="{DynamicResource TextMuted}" FontSize="11" Margin="0,16,0,0"/>
                     </StackPanel>
                 </Border>
 
@@ -25611,10 +26124,7 @@ powercfg /S SCHEME_CURRENT | Out-Null
                     <StackPanel>
                         <TextBlock Text="GET INVOLVED" Style="{StaticResource SubHeader}"/>
                         <WrapPanel>
-                            <Button Name="btnSupportDiscord" Content="Join Discord" Style="{StaticResource UtilityBtn}" ToolTip="Community support server"/>
                             <Button Name="btnSupportIssue" Content="Report Issue" Style="{StaticResource ActionBtn}" ToolTip="Submit bug reports on GitHub"/>
-                            <Button Name="btnDonateIos12" Content="Sponsor Lil_Batti" Style="{StaticResource PositiveBtn}"/>
-                            <Button Name="btnDonate" Content="Sponsor Chaython" Style="{StaticResource PositiveBtn}"/>
                         </WrapPanel>
                     </StackPanel>
                 </Border>
@@ -25635,7 +26145,7 @@ $window = New-WmtWindowFromFullXaml -Xaml $xaml -NoOwner
 } catch {
 Write-Host "FATAL: XAML load failed: $($_.Exception.Message)" -ForegroundColor Red
 Write-Host "Inner: $(($_.Exception.InnerException).Message)" -ForegroundColor Yellow
-[System.Windows.MessageBox]::Show("XAML load failed:\n$($_.Exception.Message)", 'WMT Startup Error', 'OK', 'Error') | Out-Null
+[System.Windows.MessageBox]::Show("XAML load failed:\n$($_.Exception.Message)", 'WinMedic Startup Error', 'OK', 'Error') | Out-Null
 exit 1
 }
 $ErrorActionPreference = 'SilentlyContinue'
@@ -25924,7 +26434,7 @@ foreach ($line in $sectionLines) {
 function Invoke-MyDeviceExport {
 try {
     $lines = New-Object System.Collections.Generic.List[string]
-    [void]$lines.Add("Windows Maintenance Tool - My Device Export")
+    [void]$lines.Add("WinMedic - My Device Export")
     [void]$lines.Add("Generated: $((Get-Date).ToString('yyyy-MM-dd HH:mm:ss'))")
     [void]$lines.Add("Computer: $env:COMPUTERNAME")
 
@@ -25953,6 +26463,9 @@ function Set-ButtonIcon {
 param($BtnName, $PathData, $Text, $Tooltip = "", $Scale = 16, $Color = $null)
 $btn = Get-Ctrl $BtnName
 if (-not $btn) { return }
+
+$Text = Get-WmtText $Text
+if ($Tooltip) { $Tooltip = Get-WmtText $Tooltip }
 
 if ($Scale -is [string] -and $Scale -match '^#') {
     $Color = $Scale
@@ -26058,11 +26571,8 @@ $iconDeferTimer.Add_Tick({
     Set-ButtonIcon "btnWingetUpdateAll" "M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" "Update All" "Updates all listed applications"
     Set-ButtonIcon "btnWingetInstall" "M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" "Install Selected" "Installs the selected applications"
     Set-ButtonIcon "btnWingetUninstall" "M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" "Uninstall Selected" "Uninstalls the selected applications"
-    Set-ButtonIcon "btnSupportDiscord" "M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.2 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.67-.53 3.4-1.33 5.2-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02z" "Join Discord" "Opens the community support Discord server"
     Set-ButtonIcon "btnSupportIssue" "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" "Report Issue" "Opens the GitHub Issues page to report bugs"
     Set-ButtonIcon "btnNavDownloads" "M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,6H13V12H11V6M11,14H13V16H11V14Z" "Release Downloads" "Show latest release download counts"
-    Set-ButtonIcon "btnDonateIos12" "M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.9,13.5 12,13.5C8.36,13.5 6,12.28 6,10C6,7.24 8.7,5 12,5V3H14V5C15.68,5.37 16.86,6.31 17.38,7.5H15.32C14.93,6.85 13.95,6.2 12,6.2C10.37,6.2 9,7.11 9,8.2C9,9.3 10.1,9.7 12,9.7C15.64,9.7 18,10.92 18,13.2C18,15.96 15.3,18.2 12,18.2V20H10V18.2C8.32,17.83 7.14,16.89 6.62,15.7L8.68,15.Z" "Sponsor Lil_Batti" "Support Lil_Batti via GitHub Sponsors"
-    Set-ButtonIcon "btnDonate" "M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.9,13.5 12,13.5C8.36,13.5 6,12.28 6,10C6,7.24 8.7,5 12,5V3H14V5C15.68,5.37 16.86,6.31 17.38,7.5H15.32C14.93,6.85 13.95,6.2 12,6.2C10.37,6.2 9,7.11 9,8.2C9,9.3 10.1,9.7 12,9.7C15.64,9.7 18,10.92 18,13.2C18,15.96 15.3,18.2 12,18.2V20H10V18.2C8.32,17.83 7.14,16.89 6.62,15.7L8.68,15.Z" "Sponsor Chaython" "Support Chaython via GitHub Sponsors" "#00FF00"
     Set-ButtonIcon "btnDnsGoogle" "M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z" "Google" "Sets DNS to 8.8.8.8 & 8.8.4.4"
     Set-ButtonIcon "btnDnsCloudflare" "M19.35,10.04C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.04C2.34,8.36 0,10.91 0,14A6,6 0 0,0 6,20H19A5,5 0 0,0 24,15C24,12.36 21.95,10.22 19.35,10.04Z" "Cloudflare" "Sets DNS to 1.1.1.1 & 1.0.0.1"
     Set-ButtonIcon "btnDnsQuad9" "M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z" "Quad9" "Sets DNS to 9.9.9.9 (Malware Blocking)"
@@ -27566,10 +28076,8 @@ $btnSupportIssue = Get-Ctrl "btnSupportIssue"
 $btnToggleTheme = Get-Ctrl "btnToggleTheme"
 $btnStartWithWindows = Get-Ctrl "btnStartWithWindows"
 $btnNavDownloads = Get-Ctrl "btnNavDownloads"
-$btnDonateIos12 = Get-Ctrl "btnDonateIos12"
-$btnDonate = Get-Ctrl "btnDonate"
-$btnCreditLilBatti = Get-Ctrl "btnCreditLilBatti"
-$btnCreditChaython = Get-Ctrl "btnCreditChaython"
+$btnProjectRepo = Get-Ctrl "btnProjectRepo"
+$btnToggleLanguage = Get-Ctrl "btnToggleLanguage"
 
 $bdQuickFind = Get-Ctrl "bdQuickFind"
 $txtGlobalSearch = Get-Ctrl "txtGlobalSearch"
@@ -28988,7 +29496,15 @@ $btnPowerUserSigDriver.Add_Click({
 
 # --- GLOBAL SEARCH ---
 $SearchIndex = @{}
-function Add-SearchIndexEntry { param($BtnName, $Desc, $ParentTab) $b = Get-Ctrl $BtnName; if ($b) { $SearchIndex[$Desc] = @{Button = $b; Tab = $ParentTab; Action = $null } } }
+function Add-SearchIndexEntry {
+param($BtnName, $Desc, $ParentTab)
+$b = Get-Ctrl $BtnName
+if (-not $b) { return }
+$SearchIndex[$Desc] = @{Button = $b; Tab = $ParentTab; Action = $null }
+# Index the translation too, so search works in either language.
+$loc = Get-WmtText $Desc
+if ($loc -ne $Desc) { $SearchIndex[$loc] = @{Button = $b; Tab = $ParentTab; Action = $null } }
+}
 function Add-SearchIndexAction { param($Desc, [scriptblock]$Action, $ParentTab) if ($Action) { $SearchIndex[$Desc] = @{Button = $null; Tab = $ParentTab; Action = $Action } } }
 function Update-WmtSearchIndexEntries {
 $entries = [System.Collections.ArrayList]::new()
@@ -29089,7 +29605,6 @@ $searchIndexDeferTimer.Add_Tick({
     Add-SearchIndexEntry "btnCtxBuilder" "Custom Context Menu Builder" "btnTabUtils"
 
     # 8. Support
-    Add-SearchIndexEntry "btnSupportDiscord"    "Join Discord Support"            "btnTabSupport"
     Add-SearchIndexEntry "btnSupportIssue"      "Report an Issue (GitHub)"        "btnTabSupport"
     Add-SearchIndexEntry "btnToggleTheme"       "Toggle Theme"                    "btnTabSupport"
     Add-SearchIndexEntry "btnDisableBgJobs"      "Background Jobs"                 "btnTabSupport"
@@ -33308,7 +33823,7 @@ try {
         $url = "https://embed.gog.com/account/getFilteredProducts?mediaType=1&page=$page"
         $headers = @{
             "Authorization" = "Bearer $token"
-            "User-Agent"    = "Windows-Maintenance-Tool"
+            "User-Agent"    = "WinMedic"
         }
         $resp = $null
         try {
@@ -34454,7 +34969,7 @@ $legendaryDir = '__WMT_LEGENDARY_DIR__'
 $legendaryExe = '__WMT_LEGENDARY_EXE__'
 $latestApi = "https://api.github.com/repos/legendary-gl/legendary/releases/latest"
 $fallbackUrl = "https://github.com/legendary-gl/legendary/releases/latest/download/legendary.exe"
-$headers = @{ "User-Agent" = "Windows-Maintenance-Tool" }
+$headers = @{ "User-Agent" = "WinMedic" }
 
 try {
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
@@ -34553,7 +35068,7 @@ $gogdlExe = '__WMT_GOGDL_EXE__'
 $authConfig = '__WMT_GOGDL_AUTH__'
 $latestApi = "https://api.github.com/repos/Heroic-Games-Launcher/heroic-gogdl/releases/latest"
 $fallbackUrl = "https://github.com/Heroic-Games-Launcher/heroic-gogdl/releases/latest/download/gogdl_windows_x86_64.exe"
-$headers = @{ "User-Agent" = "Windows-Maintenance-Tool" }
+$headers = @{ "User-Agent" = "WinMedic" }
 
 try {
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
@@ -38657,7 +39172,7 @@ $script:InvokeWingetSearch = {
                         try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
                         $headers = @{
                             "Accept"     = "application/vnd.pypi.simple.v1+json"
-                            "User-Agent" = "Windows-Maintenance-Tool"
+                            "User-Agent" = "WinMedic"
                         }
                         $resp = Invoke-RestMethod -Uri "https://pypi.org/simple/" -Headers $headers -UseBasicParsing -TimeoutSec 120 -ErrorAction Stop
                         if ($resp -and $resp.projects) {
@@ -38773,7 +39288,7 @@ $script:InvokeWingetSearch = {
                             if ($creds -and -not [string]::IsNullOrWhiteSpace([string]$creds.access_token)) {
                                 try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
                                 $token = [string]$creds.access_token
-                                $headers = @{ "Authorization" = "Bearer $token"; "User-Agent" = "Windows-Maintenance-Tool" }
+                                $headers = @{ "Authorization" = "Bearer $token"; "User-Agent" = "WinMedic" }
                                 $page = 1
                                 $totalPages = 1
                                 while ($page -le $totalPages -and $page -le 50) {
@@ -40322,7 +40837,7 @@ if ($btnDotNetEnable) { $btnDotNetEnable.Add_Click({
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Set .NET RollForward" Width="340" Height="230" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
     Background="{DynamicResource BgDark}" Foreground="{DynamicResource TextPrimary}"
-    FontFamily="Segoe UI Variable Display, Segoe UI, Arial" FontSize="13">
+    FontFamily="Segoe UI Variable Display, Segoe UI, Sylfaen, Arial" FontSize="13">
 <Grid Margin="20">
     <Grid.RowDefinitions>
         <RowDefinition Height="*"/>
@@ -40392,11 +40907,25 @@ if ($btnUpdateRepair) { $btnUpdateRepair.Add_Click({ Invoke-WindowsUpdateRepairF
 if ($btnCtxBuilder) { $btnCtxBuilder.Add_Click({ Show-ContextMenuBuilder }) }
 
 # --- Support ---
-if ($btnSupportDiscord) { $btnSupportDiscord.Add_Click({ Start-Process "https://discord.gg/bCQqKHGxja" }) }
-if ($btnSupportIssue) { $btnSupportIssue.Add_Click({ Start-Process "https://github.com/ios12checker/Windows-Maintenance-Tool/issues/new/choose" }) }
-if ($btnDonateIos12) { $btnDonateIos12.Add_Click({ Start-Process "https://github.com/sponsors/ios12checker" }) }
-if ($btnCreditLilBatti) { $btnCreditLilBatti.Add_Click({ Start-Process "https://github.com/ios12checker" }) }
-if ($btnCreditChaython) { $btnCreditChaython.Add_Click({ Start-Process "https://github.com/Chaython" }) }
+if ($btnSupportIssue) { $btnSupportIssue.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic/issues/new/choose" }) }
+if ($btnProjectRepo) { $btnProjectRepo.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic" }) }
+if ($btnToggleLanguage) {
+$btnToggleLanguage.Add_Click({
+        $next = if ((Get-WmtLanguageCode) -eq 'ka') { 'en' } else { 'ka' }
+        $settings = Get-WmtSettings
+        $settings.Language = $next
+        Save-WmtSettings $settings
+        $script:WmtLangCode = $null
+        $script:WmtStringMap = $null
+        $msg = if ($next -eq 'ka') {
+            "ინტერფეისის ენა შეიცვალა ქართულზე.`r`n`r`nცვლილება ძალაში შევა WinMedic-ის შემდეგი გაშვებისას."
+        }
+        else {
+            "Interface language set to English.`r`n`r`nThe change takes effect the next time WinMedic starts."
+        }
+        [System.Windows.MessageBox]::Show($msg, 'WinMedic', [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+    })
+}
 if ($btnToggleTheme) {
 $btnToggleTheme.Add_Click({
         $nextTheme = if ($script:CurrentTheme -eq "dark") { "light" } else { "dark" }
@@ -40607,7 +41136,6 @@ $btnDisableUpdateScans.Add_Click({
         Write-GuiLog "Update scans $newState."
     })
 }
-if ($btnDonate) { $btnDonate.Add_Click({ Start-Process "https://github.com/sponsors/Chaython" }) }
 
 if ($btnNavDownloads) { $btnNavDownloads.Add_Click({ Show-DownloadStats }) }
 
@@ -43994,7 +44522,7 @@ try {
                             $token = [string]$creds.access_token
                             $headers = @{
                                 "Authorization" = "Bearer $token"
-                                "User-Agent"    = "Windows-Maintenance-Tool"
+                                "User-Agent"    = "WinMedic"
                             }
                             $page = 1
                             $totalPages = 1
@@ -44038,7 +44566,7 @@ try {
                     try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
                     $headers = @{
                         "Accept"     = "application/vnd.pypi.simple.v1+json"
-                        "User-Agent" = "Windows-Maintenance-Tool"
+                        "User-Agent" = "WinMedic"
                     }
                     $resp = Invoke-RestMethod -Uri "https://pypi.org/simple/" -Headers $headers -UseBasicParsing -TimeoutSec 120 -ErrorAction Stop
                     if ($resp -and $resp.projects) {

@@ -2,8 +2,8 @@
 setlocal EnableExtensions DisableDelayedExpansion
 :: Start_WMT_GUI.bat
 set "GUI_LAUNCHER_VERSION=1.3"
-set "BAT_URL=https://raw.githubusercontent.com/ios12checker/Windows-Maintenance-Tool/refs/heads/main/Start_WMT_GUI.bat"
-set "SCRIPT_URL=https://raw.githubusercontent.com/ios12checker/Windows-Maintenance-Tool/refs/heads/main/WMT-GUI.ps1"
+set "BAT_URL=https://raw.githubusercontent.com/c0mrad393/WinMedic/refs/heads/main/Start_WMT_GUI.bat"
+set "SCRIPT_URL=https://raw.githubusercontent.com/c0mrad393/WinMedic/refs/heads/main/WMT-GUI.ps1"
 set "SCRIPT=%~dp0WMT-GUI.ps1"
 
 :: 1. Check for updates to this Launcher (.bat)
@@ -43,7 +43,7 @@ if "%PS_EXIT%"=="45" (
   echo [INFO] WMT-GUI.ps1 was updated to the latest version.
 ) else if "%PS_EXIT%"=="1" (
   powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "Add-Type -AssemblyName PresentationFramework; $msg='WMT-GUI.ps1 was not found and the download failed.' + [Environment]::NewLine + 'Please check your internet connection.'; [System.Windows.MessageBox]::Show($msg,'WMT Launcher Error',[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null"
+    "Add-Type -AssemblyName PresentationFramework; $msg='WMT-GUI.ps1 was not found and the download failed.' + [Environment]::NewLine + 'Please check your internet connection.'; [System.Windows.MessageBox]::Show($msg,'WinMedic Launcher Error',[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null"
   exit /b 1
 )
 
@@ -53,8 +53,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
 
 if "%ERRORLEVEL%"=="42" (
   powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "Add-Type -AssemblyName PresentationFramework; $msg='Invalid WMT-GUI.ps1 detected.' + [Environment]::NewLine + 'It looks like an HTML page was downloaded instead of the raw PowerShell script.' + [Environment]::NewLine + [Environment]::NewLine + 'Please download from Releases or use the raw file link.'; [System.Windows.MessageBox]::Show($msg,'WMT Launcher Error',[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null"
-  start "" "https://github.com/ios12checker/Windows-Maintenance-Tool/releases"
+    "Add-Type -AssemblyName PresentationFramework; $msg='Invalid WMT-GUI.ps1 detected.' + [Environment]::NewLine + 'It looks like an HTML page was downloaded instead of the raw PowerShell script.' + [Environment]::NewLine + [Environment]::NewLine + 'Please download from Releases or use the raw file link.'; [System.Windows.MessageBox]::Show($msg,'WinMedic Launcher Error',[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null"
+  start "" "https://github.com/c0mrad393/WinMedic/releases"
   exit /b 1
 )
 
@@ -66,6 +66,6 @@ powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command ^
 set "LAUNCH_EXIT=%ERRORLEVEL%"
 if not "%LAUNCH_EXIT%"=="0" (
   powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "Add-Type -AssemblyName PresentationFramework; $msg='Failed to start WMT-GUI.ps1.' + [Environment]::NewLine + 'Admin rights were declined or the script was blocked.' + [Environment]::NewLine + 'Launcher exit code: %LAUNCH_EXIT%' + [Environment]::NewLine + [Environment]::NewLine + 'Path:' + [Environment]::NewLine + '%SCRIPT%'; [System.Windows.MessageBox]::Show($msg,'WMT Launcher Error',[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null"
+    "Add-Type -AssemblyName PresentationFramework; $msg='Failed to start WMT-GUI.ps1.' + [Environment]::NewLine + 'Admin rights were declined or the script was blocked.' + [Environment]::NewLine + 'Launcher exit code: %LAUNCH_EXIT%' + [Environment]::NewLine + [Environment]::NewLine + 'Path:' + [Environment]::NewLine + '%SCRIPT%'; [System.Windows.MessageBox]::Show($msg,'WinMedic Launcher Error',[System.Windows.MessageBoxButton]::OK,[System.Windows.MessageBoxImage]::Error) | Out-Null"
   exit /b %LAUNCH_EXIT%
 )
