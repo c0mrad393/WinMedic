@@ -49,6 +49,7 @@ function Get-WmtMode {
     }
     catch {
         # Settings unreadable this early, or not written yet - home is the safe default.
+        Write-Debug ("Get-WmtMode: settings unavailable - {0}" -f $_.Exception.Message)
     }
 
     $mode = $mode.Trim().ToLowerInvariant()
@@ -101,6 +102,9 @@ function Update-WmtModeVisibility {
         Safe to call before the window exists; controls that cannot be resolved
         are skipped. Returns the number of controls it changed.
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSUseShouldProcessForStateChangingFunctions', '',
+        Justification = 'Repaints the current window only. Honouring -WhatIf here would leave the UI showing controls the active mode is meant to hide, which is worse than not supporting it.')]
     [CmdletBinding()]
     [OutputType([int])]
     param()

@@ -217,6 +217,8 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase, Sys
 
 function Write-GuiLog {
 param($Msg)
+# Mirror to disk before the UI: the on-screen box is lost when the app closes.
+try { Write-WmtLogFile -Message ([string]$Msg) } catch {}
 if ($script:LogBox) {
     $script:LogBox.AppendText("[$((Get-Date).ToString('HH:mm'))] $Msg`n")
     try { if ($script:LogBox.LineCount -gt ($script:WmtMaxLogLines + 100)) { Optimize-WmtLogMemory -MaxLines $script:WmtMaxLogLines } } catch {}
@@ -3617,6 +3619,8 @@ $script:WmtStringsKa = @{
     'Mode: Pro'                                                                                                                                                                    = 'რეჟიმი: Pro'
     'Home shows every feature. Pro hides consumer features such as the game library and activation tools.'                                                                         = '„სახლი“ აჩვენებს ყველა ფუნქციას. „Pro“ მალავს მომხმარებლისთვის განკუთვნილს, მაგალითად თამაშების ბიბლიოთეკასა და აქტივაციის ხელსაწყოებს.'
     'Mode switched to {0}.'                                                                                                                                                        = 'რეჟიმი შეიცვალა: {0}.'
+    'Open Logs'                                                                                                                                                                    = 'ლოგების გახსნა'
+    'Open the folder holding this machine''s activity logs'                                                                                                                        = 'ამ კომპიუტერის აქტივობის ლოგების საქაღალდის გახსნა'
 }
 
 $script:WmtLangCode  = $null
@@ -5132,6 +5136,8 @@ try {
         CustomDohEnabled           = [bool]$Settings.CustomDohEnabled
         Language                   = if ($Settings.Language) { [string]$Settings.Language } else { "ka" }
         Mode                       = if ($Settings.Mode) { [string]$Settings.Mode } else { "home" }
+        FileLoggingEnabled         = if ($null -ne $Settings.FileLoggingEnabled) { [bool]$Settings.FileLoggingEnabled } else { $true }
+        LogRetentionDays           = (ConvertTo-Int $Settings.LogRetentionDays 30)
         Theme                      = if ($Settings.Theme) { [string]$Settings.Theme } else { "dark" }
         WindowState                = if ($Settings.WindowState) { [string]$Settings.WindowState } else { "Normal" }
         WindowBounds               = if ($Settings.WindowBounds) { $Settings.WindowBounds } else { $null }
@@ -5164,6 +5170,8 @@ $defaults = @{
     WingetIncludeUnknown       = $true
     Language                   = "ka"
     Mode                       = "home"
+    FileLoggingEnabled         = $true
+    LogRetentionDays           = 30
     UpdateAutoScanMinutes      = 0
     UpdateNotificationsEnabled = $true
     UpdateSilentInstallEnabled = $false
@@ -26544,6 +26552,7 @@ powercfg /S SCHEME_CURRENT | Out-Null
                         <TextBlock Text="GET INVOLVED" Style="{StaticResource SubHeader}"/>
                         <WrapPanel>
                             <Button Name="btnSupportIssue" Content="Report Issue" Style="{StaticResource ActionBtn}" ToolTip="Submit bug reports on GitHub"/>
+                            <Button Name="btnOpenLogs" Content="Open Logs" Style="{StaticResource UtilityBtn}" ToolTip="Open the folder holding this machine's activity logs"/>
                         </WrapPanel>
                     </StackPanel>
                 </Border>
@@ -28504,6 +28513,7 @@ $btnNavDownloads = Get-Ctrl "btnNavDownloads"
 $btnProjectRepo = Get-Ctrl "btnProjectRepo"
 $btnToggleLanguage = Get-Ctrl "btnToggleLanguage"
 $btnToggleMode = Get-Ctrl "btnToggleMode"
+$btnOpenLogs = Get-Ctrl "btnOpenLogs"
 
 $bdQuickFind = Get-Ctrl "bdQuickFind"
 $txtGlobalSearch = Get-Ctrl "txtGlobalSearch"
@@ -41335,6 +41345,7 @@ if ($btnCtxBuilder) { $btnCtxBuilder.Add_Click({ Show-ContextMenuBuilder }) }
 # --- Support ---
 if ($btnSupportIssue) { $btnSupportIssue.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic/issues/new/choose" }) }
 if ($btnProjectRepo) { $btnProjectRepo.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic" }) }
+if ($btnOpenLogs) { $btnOpenLogs.Add_Click({ Show-WmtLogFolder }) }
 if ($btnToggleMode) {
 Update-WmtModeButtonCaption
 Update-WmtModeVisibility | Out-Null
