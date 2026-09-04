@@ -229,6 +229,65 @@ function Remove-WmtCommentsFromScript {
     return $tempFile
 }
 
+function New-WmtBundledScript {
+    <#
+        .SYNOPSIS
+        Inlines Modules\*.ps1 into a copy of the script for single-file builds.
+
+        .DESCRIPTION
+        At runtime WMT-GUI.ps1 dot-sources Modules\*.ps1 from disk. A compiled
+        .exe has no such folder, so the loader block - delimited by the
+        WINMEDIC MODULE LOADER markers - is replaced here with the concatenated
+        module source. Returns the original path unchanged when there is
+        nothing to inline.
+    #>
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$ModulesPath
+    )
+
+    $beginMarker = '# >>> WINMEDIC MODULE LOADER >>>'
+    $endMarker = '# <<< WINMEDIC MODULE LOADER <<<'
+
+    $source = [System.IO.File]::ReadAllText($Path)
+    $begin = $source.IndexOf($beginMarker)
+    $end = $source.IndexOf($endMarker)
+
+    if ($begin -lt 0 -or $end -lt 0) {
+        throw "Module loader markers not found in $Path. The build cannot inline Modules\ without them."
+    }
+    if ($end -lt $begin) {
+        throw "Module loader markers are out of order in $Path."
+    }
+
+    $moduleFiles = @()
+    if (Test-Path -LiteralPath $ModulesPath) {
+        $moduleFiles = @(Get-ChildItem -LiteralPath $ModulesPath -Filter '*.ps1' -File | Sort-Object Name)
+    }
+
+    if ($moduleFiles.Count -eq 0) {
+        Write-Host "No modules to inline."
+        return $Path
+    }
+
+    $builder = New-Object System.Text.StringBuilder
+    [void]$builder.AppendLine("# --- inlined from Modules\ at build time ---")
+    foreach ($moduleFile in $moduleFiles) {
+        [void]$builder.AppendLine("# --- $($moduleFile.Name) ---")
+        [void]$builder.AppendLine([System.IO.File]::ReadAllText($moduleFile.FullName))
+    }
+
+    $tail = $source.Substring($end + $endMarker.Length)
+    $bundled = $source.Substring(0, $begin) + $builder.ToString() + $tail
+
+    $tempFile = Join-Path ([System.IO.Path]::GetTempPath()) ("WinMedic-bundled-{0}.ps1" -f ([System.Guid]::NewGuid().ToString("N")))
+    $utf8Bom = New-Object System.Text.UTF8Encoding($true)
+    [System.IO.File]::WriteAllText($tempFile, $bundled, $utf8Bom)
+
+    Write-Host ("Inlined {0} module(s): {1}" -f $moduleFiles.Count, (($moduleFiles | ForEach-Object { $_.Name }) -join ', '))
+    return $tempFile
+}
+
 $resolvedInput = Resolve-WmtBuildPath -Path $InputFile -BasePath $script:WmtProjectRoot
 $resolvedOutput = Resolve-WmtBuildPath -Path $OutputFile -BasePath $script:WmtProjectRoot
 $resolvedIcon = Resolve-WmtBuildPath -Path $IconFile -BasePath $script:WmtBuildScriptRoot
@@ -246,14 +305,16 @@ if (-not (Test-Path -LiteralPath $outputDirectory)) {
     New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 }
 
-Assert-WmtPowerShellSyntax -Path $resolvedInput
+$bundledInput = New-WmtBundledScript -Path $resolvedInput -ModulesPath (Join-Path $script:WmtProjectRoot "Modules")
 
-$appVersion = ConvertTo-WmtVersionText -Version (Get-WmtSourceVersion -Path $resolvedInput)
+Assert-WmtPowerShellSyntax -Path $bundledInput
+
+$appVersion = ConvertTo-WmtVersionText -Version (Get-WmtSourceVersion -Path $bundledInput)
 $fileVersion = ConvertTo-WmtFileVersion -Version $appVersion
 $ps2exe = Get-WmtPS2EXECommand -Install:$InstallPS2EXE
 $availableParameters = @($ps2exe.Parameters.Keys)
 
-$minifiedInput = Remove-WmtCommentsFromScript -Path $resolvedInput
+$minifiedInput = Remove-WmtCommentsFromScript -Path $bundledInput
 
 try {
     $invokeArguments = @{
@@ -288,7 +349,10 @@ try {
     Write-Host "Built: $resolvedOutput"
 }
 finally {
-    if ($minifiedInput -ne $resolvedInput -and (Test-Path -LiteralPath $minifiedInput -PathType Leaf)) {
+    if ($bundledInput -ne $resolvedInput -and $bundledInput -ne $minifiedInput -and (Test-Path -LiteralPath $bundledInput -PathType Leaf)) {
+        Remove-Item -LiteralPath $bundledInput -Force
+    }
+    if ($minifiedInput -ne $resolvedInput -and $minifiedInput -ne $bundledInput -and (Test-Path -LiteralPath $minifiedInput -PathType Leaf)) {
         Remove-Item -LiteralPath $minifiedInput -Force
     }
 }

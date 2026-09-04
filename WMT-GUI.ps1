@@ -64,6 +64,34 @@ if ([string]::IsNullOrWhiteSpace($script:WmtRootPath)) {
 $script:WmtRootPath = (Get-Location).Path
 }
 
+# ==========================================
+# 1a. MODULE LOADER (WinMedic)
+# ==========================================
+# New WinMedic code lives in Modules\*.ps1 rather than in this file, so it can
+# be reviewed and linted on its own and so upstream merges keep applying here.
+# PS2EXE/Build-Exe.ps1 replaces everything between the markers below with the
+# concatenated module source, which is why a single-file .exe behaves the same
+# as a checkout. Do not remove the markers.
+
+# >>> WINMEDIC MODULE LOADER >>>
+$script:WmtModulesLoaded = @()
+try {
+$modulesDir = Join-Path $script:WmtRootPath 'Modules'
+if (Test-Path -LiteralPath $modulesDir) {
+    foreach ($moduleFile in (Get-ChildItem -LiteralPath $modulesDir -Filter '*.ps1' -File | Sort-Object Name)) {
+        try {
+            . $moduleFile.FullName
+            $script:WmtModulesLoaded += $moduleFile.Name
+        }
+        catch {
+            Write-Warning ("WinMedic module failed to load: {0} - {1}" -f $moduleFile.Name, $_.Exception.Message)
+        }
+    }
+}
+}
+catch {}
+# <<< WINMEDIC MODULE LOADER <<<
+
 # HIDE CONSOLE + DPI + TOKEN MANIPULATOR (consolidated into one Add-Type call)
 # This prevents crashes if you run the script twice in the same session
 if (-not ([System.Management.Automation.PSTypeName]'WmtNativeStartup.Native').Type) {
@@ -3585,6 +3613,10 @@ $script:WmtStringsKa = @{
     'Disable all automatic and tray-triggered update scans. Manual scans will still work. Click to toggle.'                                                                        = 'ყველა ავტომატური და ტრეიდან გამოძახებული განახლების შემოწმების გამორთვა. ხელით შემოწმება მაინც იმუშავებს. დააჭირე გადასართავად.'
     'Download AdBlock'                                                                                                                                                             = 'AdBlock-ის ჩამოტვირთვა'
     'MC Toggle'                                                                                                                                                                    = 'მეხსიერების შეკუმშვა'
+    'Mode: Home'                                                                                                                                                                   = 'რეჟიმი: სახლი'
+    'Mode: Pro'                                                                                                                                                                    = 'რეჟიმი: Pro'
+    'Home shows every feature. Pro hides consumer features such as the game library and activation tools.'                                                                         = '„სახლი“ აჩვენებს ყველა ფუნქციას. „Pro“ მალავს მომხმარებლისთვის განკუთვნილს, მაგალითად თამაშების ბიბლიოთეკასა და აქტივაციის ხელსაწყოებს.'
+    'Mode switched to {0}.'                                                                                                                                                        = 'რეჟიმი შეიცვალა: {0}.'
 }
 
 $script:WmtLangCode  = $null
@@ -5099,6 +5131,7 @@ try {
         CustomDohTemplate          = if ($Settings.CustomDohTemplate) { [string]$Settings.CustomDohTemplate } else { "" }
         CustomDohEnabled           = [bool]$Settings.CustomDohEnabled
         Language                   = if ($Settings.Language) { [string]$Settings.Language } else { "ka" }
+        Mode                       = if ($Settings.Mode) { [string]$Settings.Mode } else { "home" }
         Theme                      = if ($Settings.Theme) { [string]$Settings.Theme } else { "dark" }
         WindowState                = if ($Settings.WindowState) { [string]$Settings.WindowState } else { "Normal" }
         WindowBounds               = if ($Settings.WindowBounds) { $Settings.WindowBounds } else { $null }
@@ -5130,6 +5163,7 @@ $defaults = @{
     WingetIgnore               = @("228980") # Filter false positive updates for Steamworks Redist
     WingetIncludeUnknown       = $true
     Language                   = "ka"
+    Mode                       = "home"
     UpdateAutoScanMinutes      = 0
     UpdateNotificationsEnabled = $true
     UpdateSilentInstallEnabled = $false
@@ -26484,6 +26518,7 @@ powercfg /S SCHEME_CURRENT | Out-Null
                             <Button Name="btnStartWithWindows" Content="Start with Windows" Style="{StaticResource ActionBtn}" Height="32" MinWidth="140" Margin="0,0,8,0" ToolTip="Launch WinMedic automatically when Windows starts"/>
                             <Button Name="btnDisableBgJobs" Content="Bg Jobs: On" Style="{StaticResource ActionBtn}" Height="32" MinWidth="130" Margin="0,0,8,0" ToolTip="Background auto-refresh ENABLED. My Device info and Tweaks states load automatically. Click to disable."/>
                             <Button Name="btnDisableUpdateScans" Content="Update Scans: On" Style="{StaticResource ActionBtn}" Height="32" MinWidth="150" Margin="0,0,8,0" ToolTip="Disable all automatic and tray-triggered update scans. Manual scans will still work. Click to toggle."/>
+                            <Button Name="btnToggleMode" Content="Mode: Home" Style="{StaticResource ActionBtn}" Height="32" MinWidth="130" Margin="0,0,8,0" ToolTip="Home shows every feature. Pro hides consumer features such as the game library and activation tools."/>
                             <Button Name="btnToggleLanguage" Content="Language: ქართული" Style="{StaticResource ActionBtn}" Height="32" MinWidth="150" Margin="0,0,8,0" ToolTip="Switch the interface language"/>
                             <Button Name="btnToggleTheme" Content="Toggle Theme" Style="{StaticResource ActionBtn}" Height="32" MinWidth="112" ToolTip="Switch between dark and light theme"/>
                         </StackPanel>
@@ -26841,6 +26876,12 @@ catch {
     Write-GuiLog "[My Device] Export failed: $($_.Exception.Message)"
     Show-WmtMessageBox -Message "Failed to export My Device details:`n$($_.Exception.Message)" -Title "Export Failed" -Image Error | Out-Null
 }
+}
+
+function Update-WmtModeButtonCaption {
+$btn = Get-Ctrl "btnToggleMode"
+if (-not $btn) { return }
+$btn.Content = if (Test-WmtProMode) { Get-WmtText "Mode: Pro" } else { Get-WmtText "Mode: Home" }
 }
 
 function Set-ButtonIcon {
@@ -28462,6 +28503,7 @@ $btnStartWithWindows = Get-Ctrl "btnStartWithWindows"
 $btnNavDownloads = Get-Ctrl "btnNavDownloads"
 $btnProjectRepo = Get-Ctrl "btnProjectRepo"
 $btnToggleLanguage = Get-Ctrl "btnToggleLanguage"
+$btnToggleMode = Get-Ctrl "btnToggleMode"
 
 $bdQuickFind = Get-Ctrl "bdQuickFind"
 $txtGlobalSearch = Get-Ctrl "txtGlobalSearch"
@@ -41293,6 +41335,17 @@ if ($btnCtxBuilder) { $btnCtxBuilder.Add_Click({ Show-ContextMenuBuilder }) }
 # --- Support ---
 if ($btnSupportIssue) { $btnSupportIssue.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic/issues/new/choose" }) }
 if ($btnProjectRepo) { $btnProjectRepo.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic" }) }
+if ($btnToggleMode) {
+Update-WmtModeButtonCaption
+Update-WmtModeVisibility | Out-Null
+$btnToggleMode.Add_Click({
+        $next = if (Test-WmtProMode) { 'home' } else { 'pro' }
+        Set-WmtMode -Mode $next
+        Update-WmtModeButtonCaption
+        Write-GuiLog ((Get-WmtText "Mode switched to {0}.") -f $next)
+    })
+}
+
 if ($btnToggleLanguage) {
 $btnToggleLanguage.Add_Click({
         $next = if ((Get-WmtLanguageCode) -eq 'ka') { 'en' } else { 'ka' }
