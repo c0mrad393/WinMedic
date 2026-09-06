@@ -2973,7 +2973,6 @@ $script:WmtStringsKa = @{
     'Clean RAM'                                                                                                                                                                    = 'RAM-ის გათავისუფლება'
     'Clean Registry'                                                                                                                                                               = 'რეესტრის გაწმენდა'
     'Clean Old'                                                                                                                                                                    = 'ძველის გაწმენდა'
-    'Clean Xbox Data'                                                                                                                                                              = 'Xbox-ის მონაცემების წაშლა'
     'Appx Bloatware'                                                                                                                                                               = 'ზედმეტი Appx აპები'
     'Remove pre-installed UWP/Modern apps'                                                                                                                                         = 'წინასწარ დაყენებული UWP/Modern აპების წაშლა'
     'Select apps to remove (use Ctrl+Click for multiple)'                                                                                                                          = 'აირჩიე წასაშლელი აპები (რამდენიმესთვის Ctrl+კლიკი)'
@@ -3091,7 +3090,6 @@ $script:WmtStringsKa = @{
     'CEIP Off'                                                                                                                                                                     = 'CEIP გამორთული'
     'Compat Telemetry Off'                                                                                                                                                         = 'თავსებადობის ტელემეტრია გამორთული'
     'Feedback Notify Off'                                                                                                                                                          = 'გამოხმაურების შეტყობინებები გამორთული'
-    'Capture Off'                                                                                                                                                                  = 'ჩაწერა გამორთული'
     'Ad ID, tracking, find my device, location'                                                                                                                                    = 'სარეკლამო ID, თვალთვალი, მოწყობილობის ძებნა, მდებარეობა'
     'Activity Log'                                                                                                                                                                 = 'აქტივობის ჟურნალი'
     'Explorer & Files'                                                                                                                                                             = 'Explorer და ფაილები'
@@ -3109,7 +3107,6 @@ $script:WmtStringsKa = @{
     'Disable Thumbnail Cache'                                                                                                                                                      = 'მინიატურების ქეშის გამორთვა'
     'Disable NTFS 8.3'                                                                                                                                                             = 'NTFS 8.3 გამორთვა'
     'Disable NTFS Last Access'                                                                                                                                                     = 'NTFS ბოლო წვდომის გამორთვა'
-    'Disable FS Optimizations'                                                                                                                                                     = 'ფაილური სისტემის ოპტიმიზაციის გამორთვა'
     'Long Paths On'                                                                                                                                                                = 'გრძელი გზები ჩართული'
     'Extensions, hidden files, gallery, OneDrive'                                                                                                                                  = 'გაფართოებები, დამალული ფაილები, გალერეა, OneDrive'
     'Taskbar & Clock'                                                                                                                                                              = 'ამოცანათა ზოლი და საათი'
@@ -3199,11 +3196,6 @@ $script:WmtStringsKa = @{
     'Reduce Indexing'                                                                                                                                                              = 'ინდექსირების შემცირება'
     'Index Options'                                                                                                                                                                = 'ინდექსირების პარამეტრები'
     'Bing, history, highlights, index rebuild'                                                                                                                                     = 'Bing, ისტორია, მინიშნებები, ინდექსის აგება'
-    'Game Mode On'                                                                                                                                                                 = 'თამაშის რეჟიმი ჩართული'
-    'Game Bar On'                                                                                                                                                                  = 'Game Bar ჩართული'
-    'Game Bar Int. Off'                                                                                                                                                            = 'Game Bar ინტეგრაცია გამორთული'
-    'DVR Off'                                                                                                                                                                      = 'DVR გამორთული'
-    'Game Mode, Game Bar, DVR, FS optimizations'                                                                                                                                   = 'თამაშის რეჟიმი, Game Bar, DVR, FS ოპტიმიზაცია'
     'Developer'                                                                                                                                                                    = 'დეველოპერი'
     'Developer Settings'                                                                                                                                                           = 'დეველოპერის პარამეტრები'
     'Developer Mode On'                                                                                                                                                            = 'დეველოპერის რეჟიმი ჩართული'
@@ -3456,7 +3448,6 @@ $script:WmtStringsKa = @{
     'Remove obsolete registry entries'                                                                                                                                             = 'მოძველებული რეესტრის ჩანაწერების წაშლა'
     'Clean Reg Keys'                                                                                                                                                               = 'რეესტრის გასაღებების გაწმენდა'
     'Backs up & deletes obsolete Uninstall registry keys'                                                                                                                          = 'ინახავს ასლს და შლის მოძველებულ Uninstall რეესტრის გასაღებებს'
-    'Clear Xbox app cache'                                                                                                                                                         = 'Xbox აპის ქეშის გასუფთავება'
     'Removes Xbox Live credentials to fix login loops'                                                                                                                             = 'შლის Xbox Live-ის ავტორიზაციის მონაცემებს შესვლის მარყუჟის გამოსასწორებლად'
     'Empty process working sets and collect managed memory'                                                                                                                        = 'პროცესების სამუშაო ნაკრების გათავისუფლება და მართული მეხსიერების შეგროვება'
     'Optimize SSD performance'                                                                                                                                                     = 'SSD-ის წარმადობის ოპტიმიზაცია'
@@ -3620,10 +3611,6 @@ $script:WmtStringsKa = @{
     'Disable all automatic and tray-triggered update scans. Manual scans will still work. Click to toggle.'                                                                        = 'ყველა ავტომატური და ტრეიდან გამოძახებული განახლების შემოწმების გამორთვა. ხელით შემოწმება მაინც იმუშავებს. დააჭირე გადასართავად.'
     'Download AdBlock'                                                                                                                                                             = 'AdBlock-ის ჩამოტვირთვა'
     'MC Toggle'                                                                                                                                                                    = 'მეხსიერების შეკუმშვა'
-    'Mode: Home'                                                                                                                                                                   = 'რეჟიმი: სახლი'
-    'Mode: Pro'                                                                                                                                                                    = 'რეჟიმი: Pro'
-    'Home shows every feature. Pro hides consumer features such as the game library and activation tools.'                                                                         = '„სახლი“ აჩვენებს ყველა ფუნქციას. „Pro“ მალავს მომხმარებლისთვის განკუთვნილს, მაგალითად თამაშების ბიბლიოთეკასა და აქტივაციის ხელსაწყოებს.'
-    'Mode switched to {0}.'                                                                                                                                                        = 'რეჟიმი შეიცვალა: {0}.'
     'Open Logs'                                                                                                                                                                    = 'ლოგების გახსნა'
     'Open the folder holding this machine''s activity logs'                                                                                                                        = 'ამ კომპიუტერის აქტივობის ლოგების საქაღალდის გახსნა'
 }
@@ -5140,7 +5127,6 @@ try {
         CustomDohTemplate          = if ($Settings.CustomDohTemplate) { [string]$Settings.CustomDohTemplate } else { "" }
         CustomDohEnabled           = [bool]$Settings.CustomDohEnabled
         Language                   = if ($Settings.Language) { [string]$Settings.Language } else { "ka" }
-        Mode                       = if ($Settings.Mode) { [string]$Settings.Mode } else { "home" }
         FileLoggingEnabled         = if ($null -ne $Settings.FileLoggingEnabled) { [bool]$Settings.FileLoggingEnabled } else { $true }
         LogRetentionDays           = (ConvertTo-Int $Settings.LogRetentionDays 30)
         Theme                      = if ($Settings.Theme) { [string]$Settings.Theme } else { "dark" }
@@ -5174,7 +5160,6 @@ $defaults = @{
     WingetIgnore               = @("228980") # Filter false positive updates for Steamworks Redist
     WingetIncludeUnknown       = $true
     Language                   = "ka"
-    Mode                       = "home"
     FileLoggingEnabled         = $true
     LogRetentionDays           = 30
     UpdateAutoScanMinutes      = 0
@@ -25674,26 +25659,6 @@ powercfg /S SCHEME_CURRENT | Out-Null
                 </Border>
 
                 <!-- GAMING -->
-                <Border Background="{DynamicResource BgPanel}" CornerRadius="8" BorderThickness="0" Margin="10" Padding="15">
-                    <Grid>
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                        <Border Width="48" Height="48" CornerRadius="8" Background="{DynamicResource BgElevated}" VerticalAlignment="Top" Margin="0,0,15,0">
-                            <TextBlock Text="&#xE7FC;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="22" Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="Gaming" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"/>
-                            <TextBlock Text="Game Mode, Game Bar, DVR, FS optimizations" FontSize="11" Foreground="{DynamicResource TextMuted}" Margin="0,2,0,8"/>
-                            <WrapPanel>
-                                <Button Name="btnToggleGameMode" Content="Game Mode On" Style="{StaticResource ActionBtn}" ToolTip="Enable or disable Windows Game Mode."/>
-                                <Button Name="btnToggleGameBar" Content="Game Bar On" Style="{StaticResource ActionBtn}" ToolTip="Enable or disable Xbox Game Bar and Game DVR toggles."/>
-                                <Button Name="btnToggleGameCapture" Content="Capture Off" Style="{StaticResource ActionBtn}" ToolTip="Disable or restore background gameplay capture."/>
-                                <Button Name="btnToggleFso" Content="Disable FS Optimizations" Style="{StaticResource ActionBtn}" ToolTip="Disable fullscreen optimizations globally or restore default registry values."/>
-                                <Button Name="btnToggleGameBarIntegration" Content="Game Bar Int. Off" Style="{StaticResource ActionBtn}" ToolTip="Disable Xbox Game Bar integration (PIN, presence, monitoring service). Blue = disabled."/>
-                                <Button Name="btnToggleDVR" Content="DVR Off" Style="{StaticResource ActionBtn}" ToolTip="Disable Windows Game DVR (background recording). Blue = disabled."/>
-                            </WrapPanel>
-                        </StackPanel>
-                    </Grid>
-                </Border>
 
                 <!-- MULTI-TASKING (NEW) -->
                 <Border Background="{DynamicResource BgPanel}" CornerRadius="8" BorderThickness="0" Margin="10" Padding="15">
@@ -26453,7 +26418,6 @@ powercfg /S SCHEME_CURRENT | Out-Null
                             <Button Name="btnCleanTemp" Content="Delete Temp Files" Style="{StaticResource ActionBtn}" ToolTip="Clear temp folders"/>
                             <Button Name="btnCleanShortcuts" Content="Fix Shortcuts" Style="{StaticResource ActionBtn}" ToolTip="Remove broken shortcuts"/>
                             <Button Name="btnCleanReg" Content="Clean Registry" Style="{StaticResource WarningBtn}" ToolTip="Remove obsolete registry entries"/>
-                            <Button Name="btnCleanXbox" Content="Clean Xbox Data" Style="{StaticResource ActionBtn}" ToolTip="Clear Xbox app cache"/>
                         </WrapPanel>
                     </StackPanel>
                 </Border>
@@ -26531,7 +26495,6 @@ powercfg /S SCHEME_CURRENT | Out-Null
                             <Button Name="btnStartWithWindows" Content="Start with Windows" Style="{StaticResource ActionBtn}" Height="32" MinWidth="140" Margin="0,0,8,0" ToolTip="Launch WinMedic automatically when Windows starts"/>
                             <Button Name="btnDisableBgJobs" Content="Bg Jobs: On" Style="{StaticResource ActionBtn}" Height="32" MinWidth="130" Margin="0,0,8,0" ToolTip="Background auto-refresh ENABLED. My Device info and Tweaks states load automatically. Click to disable."/>
                             <Button Name="btnDisableUpdateScans" Content="Update Scans: On" Style="{StaticResource ActionBtn}" Height="32" MinWidth="150" Margin="0,0,8,0" ToolTip="Disable all automatic and tray-triggered update scans. Manual scans will still work. Click to toggle."/>
-                            <Button Name="btnToggleMode" Content="Mode: Home" Style="{StaticResource ActionBtn}" Height="32" MinWidth="130" Margin="0,0,8,0" ToolTip="Home shows every feature. Pro hides consumer features such as the game library and activation tools."/>
                             <Button Name="btnToggleLanguage" Content="Language: ქართული" Style="{StaticResource ActionBtn}" Height="32" MinWidth="150" Margin="0,0,8,0" ToolTip="Switch the interface language"/>
                             <Button Name="btnToggleTheme" Content="Toggle Theme" Style="{StaticResource ActionBtn}" Height="32" MinWidth="112" ToolTip="Switch between dark and light theme"/>
                         </StackPanel>
@@ -26894,12 +26857,6 @@ catch {
 }
 }
 
-function Update-WmtModeButtonCaption {
-$btn = Get-Ctrl "btnToggleMode"
-if (-not $btn) { return }
-$btn.Content = if (Test-WmtProMode) { Get-WmtText "Mode: Pro" } else { Get-WmtText "Mode: Home" }
-}
-
 function Set-ButtonIcon {
 param($BtnName, $PathData, $Text, $Tooltip = "", $Scale = 16, $Color = $null)
 $btn = Get-Ctrl $BtnName
@@ -26998,7 +26955,6 @@ $iconDeferTimer.Add_Tick({
     Set-ButtonIcon "btnRouteTable" "M19,15L13,21L11.58,19.58L15.17,16H4V4H6V14H15.17L11.58,10.42L13,9L19,15Z" "Save Route Table" "Exports the current IP routing table to the data folder"
     Set-ButtonIcon "btnRouteView" "M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,17C14.76,17 17,14.76 17,12C17,9.24 14.76,7 12,7C9.24,7 7,9.24 7,12C7,14.76 9.24,17 12,17M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" "View Route Table" "Displays the routing table in the log"
     Set-ButtonIcon "btnCleanReg" "M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M7,7V9H9V7H7M11,7V9H13V7H11M15,7V9H17V7H15M7,11V13H9V11H7M11,11V13H13V11H11M15,11V13H17V11H15M7,15V17H9V15H7M11,15V17H13V15H11M15,15V17H17V15H15Z" "Clean Reg Keys" "Backs up & deletes obsolete Uninstall registry keys"
-    Set-ButtonIcon "btnCleanXbox" "M6.4,4.8L12,10.4L17.6,4.8L19.2,6.4L13.6,12L19.2,17.6L17.6,19.2L12,13.6L6.4,19.2L4.8,17.6L10.4,12L4.8,6.4L6.4,4.8Z" "Clean Xbox Data" "Removes Xbox Live credentials to fix login loops" 18 "#107C10"
     Set-ButtonIcon "btnUpdateRepair" "M21,10.12H14.22L16.96,7.3C14.55,4.61 10.54,4.42 7.85,6.87C5.16,9.32 5.35,13.33 7.8,16.03C10.25,18.72 14.26,18.91 16.95,16.46C17.65,15.82 18.2,15.05 18.56,14.21L20.62,15.05C19.79,16.89 18.3,18.42 16.39,19.34C13.4,20.78 9.77,20.21 7.37,17.96C4.96,15.71 4.54,12.06 6.37,9.32C8.2,6.59 11.83,5.65 14.65,7.09L17.38,4.35H10.63V2.35H21V10.12Z" "Reset Update Svc" "Stops services, clears cache, and resets Windows Update components"
     Set-ButtonIcon "btnUpdateServices" "M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12H20A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C14.23,4 16.24,4.82 17.76,6.24L14,10H22V2L19.36,4.64C17.5,2.89 14.89,2 12,2Z" "Restart Update Svcs" "Restarts update-related services"
     Set-ButtonIcon "btnDotNetEnable" "M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z" "Set .NET RollFwd" "Sets DOTNET_ROLL_FORWARD=LatestMajor (Force apps to use newest .NET)"
@@ -27214,12 +27170,6 @@ $script:TweakMetaData = @{
 "btnToggleSearchHighlights"   = @{ Description = "Search Highlights show trending searches, news, and daily content in the search box. Disabling it gives a clean search box."; RestartHint = "No restart needed - applies instantly." }
 
 # Gaming
-"btnToggleGameMode"           = @{ Description = "Game Mode prioritizes CPU/GPU resources for games and suppresses Windows Update installations during gameplay."; RestartHint = "No restart needed." }
-"btnToggleGameBar"            = @{ Description = "Xbox Game Bar provides overlay widgets for screenshots, recording, and performance monitoring (Win+G). Disabling it frees resources but removes these features."; RestartHint = "No restart needed." }
-"btnToggleGameCapture"        = @{ Description = "Background gameplay capture (Game DVR) constantly records your screen so you can save the last 30 seconds. Disabling it saves disk I/O and CPU."; RestartHint = "No restart needed." }
-"btnToggleFso"                = @{ Description = "Fullscreen Optimizations let Windows borderless-fullscreen games be treated like exclusive fullscreen for better performance. Disabling it forces exclusive fullscreen (older behavior)."; RestartHint = "Restart the game to apply." }
-"btnToggleGameBarIntegration" = @{ Description = "Game Bar integration includes the PIN helper, presence detection, and monitoring service. Disabling it fully removes Game Bar background processes."; RestartHint = "Restart to apply." }
-"btnToggleDVR"                = @{ Description = "Game DVR (Windows Game Recording) enables background recording of gameplay. Disabling it frees CPU and disk resources."; RestartHint = "No restart needed." }
 
 # Multi-tasking
 "btnToggleSnapAssist"         = @{ Description = "Snap Assist shows a thumbnail picker of other windows when you snap one to half the screen. Disabling it means snapping does not prompt you to pick the adjacent window."; RestartHint = "No restart needed - applies instantly." }
@@ -27858,16 +27808,6 @@ try {
         Update-WmtTweakToggle $sh2Btn $shOff "Search History On" "Search History Off"
     }
 
-    $gbiBtn = Get-Ctrl "btnToggleGameBarIntegration"
-    if ($gbiBtn) {
-        $gbiOff = (((ConvertTo-Int (& $getRegValue "HKCU:\Software\Microsoft\GameBar" "AllowAutoGameMode" 1) 0) -eq 0) -or ((ConvertTo-Int (& $getRegValue "HKCU:\System\GameConfigStore" "GameDVR_Enabled" 1) 0) -eq 0))
-        Update-WmtTweakToggle $gbiBtn $gbiOff "Game Bar Int. On" "Game Bar Int. Off"
-    }
-    $dvrBtn = Get-Ctrl "btnToggleDVR"
-    if ($dvrBtn) {
-        $dvrOff = (((ConvertTo-Int (& $getRegValue "HKCU:\System\GameConfigStore" "GameDVR_Enabled" 1) 0) -eq 0))
-        Update-WmtTweakToggle $dvrBtn $dvrOff "DVR On" "DVR Off"
-    }
 
     $blBtn = Get-Ctrl "btnToggleBitlocker"
     if ($blBtn) {
@@ -28040,21 +27980,10 @@ try {
         Update-WmtTweakToggle $btnToggleSearchIndex $indexReduced "Reduce Indexing" "Default Indexing"
     }
 
-    $gameBarPath = "HKCU:\Software\Microsoft\GameBar"
-    $gameDvrPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR"
-    $gameCfgPath = "HKCU:\System\GameConfigStore"
     $gameModeOn = ((ConvertTo-Int (& $getRegValue $gameBarPath "AutoGameModeEnabled" 0) 0) -eq 1 -or (ConvertTo-Int (& $getRegValue $gameBarPath "AllowAutoGameMode" 0) 0) -eq 1)
-    $btnToggleGameMode = Get-Ctrl "btnToggleGameMode"
-    Update-WmtTweakToggle $btnToggleGameMode $gameModeOn "Game Mode On" "Game Mode Off"
     $gameBarOn = ((ConvertTo-Int (& $getRegValue $gameDvrPath "AppCaptureEnabled" 1) 0) -ne 0 -and (ConvertTo-Int (& $getRegValue $gameCfgPath "GameDVR_Enabled" 1) 0) -ne 0)
-    $btnToggleGameBar = Get-Ctrl "btnToggleGameBar"
-    Update-WmtTweakToggle $btnToggleGameBar $gameBarOn "Game Bar On" "Game Bar Off"
     $captureOn = ((ConvertTo-Int (& $getRegValue $gameDvrPath "HistoricalCaptureEnabled" 1) 0) -ne 0)
-    $btnToggleGameCapture = Get-Ctrl "btnToggleGameCapture"
-    Update-WmtTweakToggle $btnToggleGameCapture (-not $captureOn) "Capture Off" "Capture On"
     $fsoOff = ((ConvertTo-Int (& $getRegValue $gameCfgPath "GameDVR_FSEBehaviorMode" 0) 0) -eq 2 -and (ConvertTo-Int (& $getRegValue $gameCfgPath "GameDVR_HonorUserFSEBehaviorMode" 0) 0) -eq 1)
-    $btnToggleFso = Get-Ctrl "btnToggleFso"
-    Update-WmtTweakToggle $btnToggleFso $fsoOff "Disable FS Optimizations" "Default FS Optimizations"
 
     $visualPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"
     $visualMode = (ConvertTo-Int (& $getRegValue $visualPath "VisualFXSetting" 0) 0)
@@ -28280,7 +28209,6 @@ $btnCleanDisk = Get-Ctrl "btnCleanDisk"
 $btnCleanTemp = Get-Ctrl "btnCleanTemp"
 $btnCleanShortcuts = Get-Ctrl "btnCleanShortcuts"
 $btnCleanReg = Get-Ctrl "btnCleanReg"
-$btnCleanXbox = Get-Ctrl "btnCleanXbox"
 $btnCleanupOneDrive = Get-Ctrl "btnCleanupOneDrive"
 
 $btnUtilSysInfo = Get-Ctrl "btnUtilSysInfo"
@@ -28530,7 +28458,6 @@ $btnStartWithWindows = Get-Ctrl "btnStartWithWindows"
 $btnNavDownloads = Get-Ctrl "btnNavDownloads"
 $btnProjectRepo = Get-Ctrl "btnProjectRepo"
 $btnToggleLanguage = Get-Ctrl "btnToggleLanguage"
-$btnToggleMode = Get-Ctrl "btnToggleMode"
 $btnOpenLogs = Get-Ctrl "btnOpenLogs"
 
 $bdQuickFind = Get-Ctrl "bdQuickFind"
@@ -29111,39 +29038,7 @@ $btnToggleSearchHistory.Add_Click({
     })
 }
 
-$btnToggleGameBarIntegration = Get-Ctrl "btnToggleGameBarIntegration"
-if ($btnToggleGameBarIntegration) {
-$btnToggleGameBarIntegration.Add_Click({
-        $p1 = "HKCU:\Software\Microsoft\GameBar"
-        $p2 = "HKCU:\System\GameConfigStore"
-        Clear-WmtRegCache @("HKCU:\Software\Microsoft\GameBar", "HKCU:\System\GameConfigStore")
-        $currentlyOff = (((ConvertTo-Int (Get-WmtRegValue $p1 "AllowAutoGameMode" 1) 0) -eq 0) -or ((ConvertTo-Int (Get-WmtRegValue $p2 "GameDVR_Enabled" 1) 0) -eq 0))
-        if ($currentlyOff) {
-            Invoke-UiCommand { Set-WmtRegDword $p1 "AllowAutoGameMode" 1; Set-WmtRegDword $p1 "AutoGameModeEnabled" 1; Set-WmtRegDword $p2 "GameDVR_Enabled" 1; Write-GuiLog "Game Bar integration enabled." } "Enabling Game Bar integration..."
-        }
-        else {
-            Invoke-UiCommand { Set-WmtRegDword $p1 "AllowAutoGameMode" 0; Set-WmtRegDword $p1 "AutoGameModeEnabled" 0; Set-WmtRegDword $p2 "GameDVR_Enabled" 0; Write-GuiLog "Game Bar integration disabled." } "Disabling Game Bar integration..."
-        }
-        Update-WmtTweakToggle $btnToggleGameBarIntegration (-not $currentlyOff) "Game Bar Int. On" "Game Bar Int. Off"
-    })
-}
 
-$btnToggleDVR = Get-Ctrl "btnToggleDVR"
-if ($btnToggleDVR) {
-$btnToggleDVR.Add_Click({
-        $p1 = "HKCU:\System\GameConfigStore"
-        $p2 = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR"
-        Clear-WmtRegCache @("HKCU:\System\GameConfigStore")
-        $currentlyOff = (((ConvertTo-Int (Get-WmtRegValue $p1 "GameDVR_Enabled" 1) 0) -eq 0))
-        if ($currentlyOff) {
-            Invoke-UiCommand { Set-WmtRegDword $p1 "GameDVR_Enabled" 1; Set-WmtRegDword $p2 "AllowGameDVR" 1; Write-GuiLog "Game DVR enabled." } "Enabling Game DVR..."
-        }
-        else {
-            Invoke-UiCommand { Set-WmtRegDword $p1 "GameDVR_Enabled" 0; Set-WmtRegDword $p2 "AllowGameDVR" 0; Write-GuiLog "Game DVR disabled." } "Disabling Game DVR..."
-        }
-        Update-WmtTweakToggle $btnToggleDVR (-not $currentlyOff) "DVR On" "DVR Off"
-    })
-}
 
 $btnToggleBitlocker = Get-Ctrl "btnToggleBitlocker"
 if ($btnToggleBitlocker) {
@@ -30040,7 +29935,6 @@ $searchIndexDeferTimer.Add_Tick({
     Add-SearchIndexEntry "btnCleanTemp"         "Clean Temporary Files"           "btnTabCleanup"
     Add-SearchIndexEntry "btnCleanShortcuts"    "Fix Broken Shortcuts"            "btnTabCleanup"
     Add-SearchIndexEntry "btnCleanReg"          "Registry Cleanup & Backup"       "btnTabCleanup"
-    Add-SearchIndexEntry "btnCleanXbox"         "Clean Xbox Credentials"          "btnTabCleanup"
     Add-SearchIndexEntry "btnCleanupOneDrive" "Free up OneDrive space (Online Only)" "btnTabCleanup"
 
     # 7. Utilities
@@ -30162,8 +30056,6 @@ $searchIndexDeferTimer.Add_Tick({
     Add-SearchIndexEntry "btnToggleAppLaunch" "App Launch Tracking" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleSearchIndex" "Search Indexing" "btnTabTweaks"
     Add-SearchIndexEntry "btnSearchIndexOptions" "Index Options" "btnTabTweaks"
-    Add-SearchIndexEntry "btnToggleGameCapture" "Game Capture" "btnTabTweaks"
-    Add-SearchIndexEntry "btnToggleFso" "Fullscreen Optimizations" "btnTabTweaks"
     Add-SearchIndexEntry "btnVisualBestAppearance" "Visual Best Appearance" "btnTabTweaks"
     Add-SearchIndexEntry "btnVisualBestPerformance" "Visual Best Performance" "btnTabTweaks"
     Add-SearchIndexEntry "btnNotifyFocusSettings" "Focus Assist Settings" "btnTabTweaks"
@@ -30212,8 +30104,6 @@ $searchIndexDeferTimer.Add_Tick({
     Add-SearchIndexEntry "btnToggleLockscreenTips" "Lockscreen Tips" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleSearchHighlights" "Search Highlights" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleSearchHistory" "Search History" "btnTabTweaks"
-    Add-SearchIndexEntry "btnToggleGameBarIntegration" "Game Bar Integration" "btnTabTweaks"
-    Add-SearchIndexEntry "btnToggleDVR" "Game DVR" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleBitlocker" "Bitlocker Auto Encryption" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleStickyKeys" "Sticky Keys" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleDeliveryOpt" "Delivery Optimization" "btnTabTweaks"
@@ -30294,8 +30184,6 @@ $searchIndexDeferTimer.Add_Tick({
     Add-SearchIndexEntry "btnToggleSuggested" "Suggested Content" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleWebSearch" "Start Menu Web Search" "btnTabTweaks"
     Add-SearchIndexEntry "btnSearchIndexRebuild" "Rebuild Windows Search Index" "btnTabTweaks"
-    Add-SearchIndexEntry "btnToggleGameMode" "Game Mode" "btnTabTweaks"
-    Add-SearchIndexEntry "btnToggleGameBar" "Xbox Game Bar" "btnTabTweaks"
     Add-SearchIndexEntry "btnVisualSnappy" "Snappy Desktop Visual Effects" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleTips" "Windows Tips" "btnTabTweaks"
     Add-SearchIndexEntry "btnToggleLockScreen" "Lock Screen Style" "btnTabTweaks"
@@ -41265,9 +41153,6 @@ $btnCleanupOneDrive.Add_Click({
         } "Freeing OneDrive Space..."
     })
 }
-if ($btnCleanXbox) { $btnCleanXbox.Add_Click({
-    if (Show-WmtMessageBox -Message "Delete stored Xbox credentials? This signs you out of Xbox services." -Title "Xbox Cleanup" -Button YesNo -Image Warning -eq [System.Windows.MessageBoxResult]::Yes) { Start-XboxClean }
-}) }
 
 # --- Utilities ---
 if ($btnUpdateServices) { $btnUpdateServices.Add_Click({
@@ -41365,17 +41250,6 @@ if ($btnCtxBuilder) { $btnCtxBuilder.Add_Click({ Show-ContextMenuBuilder }) }
 if ($btnSupportIssue) { $btnSupportIssue.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic/issues/new/choose" }) }
 if ($btnProjectRepo) { $btnProjectRepo.Add_Click({ Start-Process "https://github.com/c0mrad393/WinMedic" }) }
 if ($btnOpenLogs) { $btnOpenLogs.Add_Click({ Show-WmtLogFolder }) }
-if ($btnToggleMode) {
-Update-WmtModeButtonCaption
-Update-WmtModeVisibility | Out-Null
-$btnToggleMode.Add_Click({
-        $next = if (Test-WmtProMode) { 'home' } else { 'pro' }
-        Set-WmtMode -Mode $next
-        Update-WmtModeButtonCaption
-        Write-GuiLog ((Get-WmtText "Mode switched to {0}.") -f $next)
-    })
-}
-
 if ($btnToggleLanguage) {
 $btnToggleLanguage.Add_Click({
         $next = if ((Get-WmtLanguageCode) -eq 'ka') { 'en' } else { 'ka' }
@@ -42333,95 +42207,6 @@ $btnToggleSearchIndex.Add_Click({
 
 Register-WmtTweakButton "btnSearchIndexOptions" { Start-Process "control.exe" "srchadmin.dll" }
 
-$btnToggleGameMode = Get-Ctrl "btnToggleGameMode"
-if ($btnToggleGameMode) {
-$btnToggleGameMode.Add_Click({
-        Clear-WmtRegCache @("HKCU:\Software\Microsoft\GameBar")
-        $currentlyOn = (((ConvertTo-Int (Get-WmtRegValue "HKCU:\Software\Microsoft\GameBar" "AutoGameModeEnabled" 0) 0)) -eq 1 -or ((ConvertTo-Int (Get-WmtRegValue "HKCU:\Software\Microsoft\GameBar" "AllowAutoGameMode" 0) 0)) -eq 1)
-        if ($currentlyOn) {
-            Invoke-UiCommand {
-                Set-WmtRegDword "HKCU:\Software\Microsoft\GameBar" "AllowAutoGameMode" 0
-                Set-WmtRegDword "HKCU:\Software\Microsoft\GameBar" "AutoGameModeEnabled" 0
-                Write-GuiLog "Game Mode disabled."
-            } "Disabling Game Mode..."
-        }
-        else {
-            Invoke-UiCommand {
-                Set-WmtRegDword "HKCU:\Software\Microsoft\GameBar" "AllowAutoGameMode" 1
-                Set-WmtRegDword "HKCU:\Software\Microsoft\GameBar" "AutoGameModeEnabled" 1
-                Write-GuiLog "Game Mode enabled."
-            } "Enabling Game Mode..."
-        }
-        Update-WmtTweakToggle $btnToggleGameMode (-not $currentlyOn) "Game Mode On" "Game Mode Off"
-    })
-}
-$btnToggleGameBar = Get-Ctrl "btnToggleGameBar"
-if ($btnToggleGameBar) {
-$btnToggleGameBar.Add_Click({
-        Clear-WmtRegCache @("HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR", "HKCU:\System\GameConfigStore")
-        $currentlyOn = (((ConvertTo-Int (Get-WmtRegValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" "AppCaptureEnabled" 1) 0)) -ne 0 -and ((ConvertTo-Int (Get-WmtRegValue "HKCU:\System\GameConfigStore" "GameDVR_Enabled" 1) 0)) -ne 0)
-        if ($currentlyOn) {
-            Invoke-UiCommand {
-                Set-WmtRegDword "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" "AppCaptureEnabled" 0
-                Set-WmtRegDword "HKCU:\System\GameConfigStore" "GameDVR_Enabled" 0
-                Set-WmtRegDword "HKCU:\Software\Microsoft\GameBar" "UseNexusForGameBarEnabled" 0
-                Write-GuiLog "Xbox Game Bar disabled."
-            } "Disabling Xbox Game Bar..."
-        }
-        else {
-            Invoke-UiCommand {
-                Set-WmtRegDword "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" "AppCaptureEnabled" 1
-                Set-WmtRegDword "HKCU:\System\GameConfigStore" "GameDVR_Enabled" 1
-                Set-WmtRegDword "HKCU:\Software\Microsoft\GameBar" "UseNexusForGameBarEnabled" 1
-                Write-GuiLog "Xbox Game Bar restored."
-            } "Restoring Xbox Game Bar..."
-        }
-        Update-WmtTweakToggle $btnToggleGameBar (-not $currentlyOn) "Game Bar On" "Game Bar Off"
-    })
-}
-$btnToggleGameCapture = Get-Ctrl "btnToggleGameCapture"
-if ($btnToggleGameCapture) {
-$btnToggleGameCapture.Add_Click({
-        Clear-WmtRegCache @("HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR")
-        $currentlyOn = (((ConvertTo-Int (Get-WmtRegValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" "HistoricalCaptureEnabled" 1) 0)) -eq 0)
-        if ($currentlyOn) {
-            Invoke-UiCommand { Set-WmtRegDword "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" "HistoricalCaptureEnabled" 1; Write-GuiLog "Background capture restored." } "Restoring background capture..."
-        }
-        else {
-            Invoke-UiCommand { Set-WmtRegDword "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" "HistoricalCaptureEnabled" 0; Write-GuiLog "Background capture disabled." } "Disabling background capture..."
-        }
-        Update-WmtTweakToggle $btnToggleGameCapture (-not $currentlyOn) "Capture Off" "Capture On"
-    })
-}
-$btnToggleFso = Get-Ctrl "btnToggleFso"
-if ($btnToggleFso) {
-$btnToggleFso.Add_Click({
-        $fsoPath = "HKCU:\System\GameConfigStore"
-        Clear-WmtRegCache @("HKCU:\System\GameConfigStore")
-        $currentlyOn = (((ConvertTo-Int (Get-WmtRegValue $fsoPath "GameDVR_FSEBehaviorMode" 0) 0)) -eq 2 -and ((ConvertTo-Int (Get-WmtRegValue $fsoPath "GameDVR_HonorUserFSEBehaviorMode" 0) 0)) -eq 1)
-        if ($currentlyOn) {
-            Invoke-UiCommand {
-                $path = "HKCU:\System\GameConfigStore"
-                Set-WmtRegDword $path "GameDVR_FSEBehaviorMode" 0
-                Set-WmtRegDword $path "GameDVR_HonorUserFSEBehaviorMode" 0
-                Set-WmtRegDword $path "GameDVR_DXGIHonorFSEWindowsCompatible" 0
-                Set-WmtRegDword $path "GameDVR_EFSEFeatureFlags" 0
-                Write-GuiLog "Fullscreen optimization defaults restored."
-            } "Restoring fullscreen optimizations..."
-        }
-        else {
-            Invoke-UiCommand {
-                $path = "HKCU:\System\GameConfigStore"
-                Set-WmtRegDword $path "GameDVR_FSEBehaviorMode" 2
-                Set-WmtRegDword $path "GameDVR_HonorUserFSEBehaviorMode" 1
-                Set-WmtRegDword $path "GameDVR_DXGIHonorFSEWindowsCompatible" 1
-                Set-WmtRegDword $path "GameDVR_EFSEFeatureFlags" 0
-                Write-GuiLog "Fullscreen optimizations disabled globally."
-            } "Disabling fullscreen optimizations..."
-        }
-        Update-WmtTweakToggle $btnToggleFso (-not $currentlyOn) "Disable FS Optimizations" "Default FS Optimizations"
-    })
-}
 
 Register-WmtTweakButton "btnVisualBestAppearance" { Invoke-UiCommand { Set-WmtVisualPreset "Appearance"; Write-GuiLog "Visual effects set to best appearance." } "Applying best appearance..." }
 Register-WmtTweakButton "btnVisualBestPerformance" { Invoke-UiCommand { Set-WmtVisualPreset "Performance"; Write-GuiLog "Visual effects set to best performance." } "Applying best performance..." }
