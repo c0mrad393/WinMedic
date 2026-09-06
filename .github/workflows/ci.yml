@@ -40,6 +40,31 @@ jobs:
               }
           if ($failed) { throw "One or more files failed to parse." }
 
+      # pwsh 7 accepts syntax that Windows PowerShell 5.1 rejects outright
+      # (assigning from try/catch, ternaries, null-coalescing). 5.1 is what a
+      # stock Windows 10/11 runs, so it gets its own gate.
+      - name: Parse with Windows PowerShell 5.1
+        shell: powershell
+        run: |
+          $failed = $false
+          Get-ChildItem -Path . -Recurse -Include *.ps1, *.psm1 |
+              Where-Object { $_.FullName -notmatch '\\\.git\\' } |
+              ForEach-Object {
+                  $errors = $null
+                  $tokens = $null
+                  [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors) | Out-Null
+                  if ($errors -and $errors.Count -gt 0) {
+                      $failed = $true
+                      foreach ($e in $errors) {
+                          Write-Host "::error file=$($_.FullName),line=$($e.Extent.StartLineNumber)::[PS 5.1] $($e.Message)"
+                      }
+                  }
+                  else {
+                      Write-Host "ok  $($_.Name)"
+                  }
+              }
+          if ($failed) { throw "One or more files failed to parse under Windows PowerShell 5.1." }
+
       # The main window is built from XAML held in here-strings. A malformed
       # attribute only shows up when the window is created at runtime, so parse
       # each block here instead.

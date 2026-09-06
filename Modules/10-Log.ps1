@@ -231,6 +231,46 @@ function Write-WmtLogHeader {
     }
 }
 
+$script:WmtStartupWatch = $null
+$script:WmtStartupLast = 0
+
+function Write-WmtStartupMark {
+    <#
+        .SYNOPSIS
+        Records how long a startup phase took, to the activity log.
+
+        .DESCRIPTION
+        Startup cost cannot be reasoned about from the source: the main window
+        is 1,424 WPF elements and the work is spread across XAML parsing,
+        control binding, icon construction and deferred timers. This writes a
+        real timing breakdown on the machine that actually runs it, so
+        optimisation follows measurement instead of guesswork.
+
+        Costs one Stopwatch read per call, so it is safe to leave enabled.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Phase
+    )
+
+    try {
+        if (-not $script:WmtStartupWatch) {
+            $script:WmtStartupWatch = [System.Diagnostics.Stopwatch]::StartNew()
+            $script:WmtStartupLast = 0
+        }
+
+        $total = $script:WmtStartupWatch.ElapsedMilliseconds
+        $delta = $total - $script:WmtStartupLast
+        $script:WmtStartupLast = $total
+
+        Write-WmtLogFile -Message ('startup: {0,-28} +{1,6} ms   (total {2} ms)' -f $Phase, $delta, $total)
+    }
+    catch {
+        Write-Debug ("Write-WmtStartupMark: {0}" -f $_.Exception.Message)
+    }
+}
+
 function Show-WmtLogFolder {
     <#
         .SYNOPSIS

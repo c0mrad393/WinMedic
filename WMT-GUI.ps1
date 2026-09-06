@@ -2299,8 +2299,13 @@ if (-not $script:WmtBrushConverter) {
     $script:WmtBrushConverter = [System.Windows.Media.BrushConverter]::new()
 }
 
-try { return $script:WmtBrushConverter.ConvertFromString($ColorOrKey) }
-catch { return $script:WmtBrushConverter.ConvertFromString("#8B949E") }
+# Assigning from try/catch is PowerShell 7 syntax; this script targets 5.1.
+$brush = $null
+try { $brush = $script:WmtBrushConverter.ConvertFromString($ColorOrKey) }
+catch { $brush = $script:WmtBrushConverter.ConvertFromString("#8B949E") }
+# A frozen Freezable skips per-render change tracking and is safe to share.
+if ($brush -and -not $brush.IsFrozen -and $brush.CanFreeze) { $brush.Freeze() }
+return $brush
 }
 
 function Set-WmtThemeResources {
@@ -26569,7 +26574,9 @@ powercfg /S SCHEME_CURRENT | Out-Null
 # ==========================================
 $ErrorActionPreference = 'Stop'
 try {
+Write-WmtStartupMark -Phase 'script body to XAML'
 $window = New-WmtWindowFromFullXaml -Xaml $xaml -NoOwner
+Write-WmtStartupMark -Phase 'XAML parse (1424 elements)'
 } catch {
 Write-Host "FATAL: XAML load failed: $($_.Exception.Message)" -ForegroundColor Red
 Write-Host "Inner: $(($_.Exception.InnerException).Message)" -ForegroundColor Yellow
@@ -26909,7 +26916,16 @@ if ($Scale -is [string] -and $Scale -match '^#') {
 # Visuals
 $sp = New-Object System.Windows.Controls.StackPanel; $sp.Orientation = "Horizontal"
 $path = New-Object System.Windows.Shapes.Path
-$path.Data = [System.Windows.Media.Geometry]::Parse($PathData)
+# 92 icons are built at startup; several share artwork. Parse each path string
+# once, freeze it, and reuse the geometry across every button that wants it.
+if (-not $script:WmtGeometryCache) { $script:WmtGeometryCache = @{} }
+$geometry = $script:WmtGeometryCache[$PathData]
+if (-not $geometry) {
+    $geometry = [System.Windows.Media.Geometry]::Parse($PathData)
+    if ($geometry.CanFreeze) { $geometry.Freeze() }
+    $script:WmtGeometryCache[$PathData] = $geometry
+}
+$path.Data = $geometry
 if ([string]::IsNullOrWhiteSpace([string]$Color)) {
     $path.SetResourceReference([System.Windows.Shapes.Path]::FillProperty, "TextSecondary")
 }
@@ -26934,6 +26950,7 @@ $iconDeferTimer = New-Object System.Windows.Threading.DispatcherTimer
 $iconDeferTimer.Interval = [TimeSpan]::FromMilliseconds(300)
 $iconDeferTimer.Add_Tick({
     try { $iconDeferTimer.Stop() } catch {}
+    Write-WmtStartupMark -Phase 'idle before icon pass'
     Set-ButtonIcon "btnTabUpdates" "M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" "Updates" "Manage software updates across enabled providers" 18 "#00FF00"
     # Set-ButtonIcon "btnTabHealth" - CUSTOM LOGIC BELOW
     Set-ButtonIcon "btnTabNetwork" "M5,3A2,2 0 0,0 3,5V15A2,2 0 0,0 5,17H8V15H5V5H19V15H16V17H19A2,2 0 0,0 21,15V5A2,2 0 0,0 19,3H5M11,15H13V17H11V15M11,11H13V13H11V11M11,7H13V9H11V7Z" "Network & DNS" "DNS, IP Config, Network Repair tools" 18
@@ -27057,6 +27074,7 @@ $iconDeferTimer.Add_Tick({
     Set-ButtonIcon "btnLibraryRefresh" "M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" "Refresh Library" "Re-scan Steam manifests and refresh Legendary/GOGDL caches" 16
     $iconDeferTimer = $null
 })
+Write-WmtStartupMark -Phase 'control binding + handlers'
 $iconDeferTimer.Start()
 # ==========================================
 # 5. LOGIC & EVENTS
@@ -29960,6 +29978,7 @@ $searchIndexDeferTimer = New-Object System.Windows.Threading.DispatcherTimer
 $searchIndexDeferTimer.Interval = [TimeSpan]::FromMilliseconds(500)
 $searchIndexDeferTimer.Add_Tick({
     try { $searchIndexDeferTimer.Stop() } catch {}
+    Write-WmtStartupMark -Phase 'idle before search index'
     Add-SearchIndexEntry "btnWingetScan"        "Check Package Updates"           "btnTabUpdates"
     Add-SearchIndexEntry "btnWingetUpdateSel"   "Update Checked Apps"             "btnTabUpdates"
     Add-SearchIndexEntry "btnWingetUpdateAll"   "Update All Apps"                 "btnTabUpdates"
@@ -45468,11 +45487,14 @@ if ($script:WmtDispatcherUnhandledHandler) {
 $script:WmtDispatcherUnhandledHandler = [System.Windows.Threading.DispatcherUnhandledExceptionEventHandler] {
     param($s, $eA)
 
-    try { $eventArgs.Handled = $true } catch {}
+    # $eventArgs was never a variable in this scope, so Handled was never set
+    # and the exception was never recorded: WPF tore the app down with no trace.
+    try { $eA.Handled = $true } catch {}
     try {
-        Write-WmtLastCrash -Context "Unhandled WPF dispatcher exception" -Exception $eventArgs.Exception
+        Write-GuiLog "Unhandled UI exception: $($eA.Exception.Message)"
+        Write-WmtLastCrash -Context "Unhandled WPF dispatcher exception" -Exception $eA.Exception
         if ($script:WingetJob -or $script:WingetActiveAction) {
-            Reset-WmtUpdateUiAfterMonitorError -Context "Unhandled WPF dispatcher exception" -Exception $eventArgs.Exception -SkipCrashWrite
+            Reset-WmtUpdateUiAfterMonitorError -Context "Unhandled WPF dispatcher exception" -Exception $eA.Exception -SkipCrashWrite
         }
     }
     catch {}
@@ -45481,6 +45503,7 @@ $script:WmtApplication.add_DispatcherUnhandledException($script:WmtDispatcherUnh
 
 $script:WmtApplication.ShutdownMode = [System.Windows.ShutdownMode]::OnLastWindowClose
 $script:WmtApplication.MainWindow = $window
+Write-WmtStartupMark -Phase 'ready, entering message loop'
 [void]$script:WmtApplication.Run($window)
 }
 catch {

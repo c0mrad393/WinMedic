@@ -31,6 +31,14 @@
     )
 
     Rules        = @{
+        # WinMedic runs on whatever Windows ships: PowerShell 5.1 on a stock
+        # Windows 10/11 install. CI parses with pwsh 7, which happily accepts
+        # syntax 5.1 rejects at parse time, so state the target explicitly.
+        PSUseCompatibleSyntax      = @{
+            Enable         = $true
+            TargetVersions = @('5.1')
+        }
+
         PSPlaceOpenBrace           = @{ Enable = $false }
         PSPlaceCloseBrace          = @{ Enable = $false }
         PSUseConsistentIndentation = @{ Enable = $false }
